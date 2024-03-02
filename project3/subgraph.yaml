@@ -1,0 +1,65 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: AuctionFactory
+    network: sepolia
+    source:
+      address: "0xFD21f209bc31a220630bf68a0E97D0C6AB6A628c"
+      abi: AuctionFactory
+      startBlock: 5386520
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AuctionCollection
+        - AuctionCommon
+        - AuctionDetail
+        - Trade
+        - User
+        - NFT
+      abis:
+        - name: AuctionFactory
+          file: ./abis/AuctionFactory.json
+        - name: DutchAuction721
+          file: ./abis/DutchAuction721.json
+        - name: DutchAuction1155
+          file: ./abis/DutchAuction1155.json
+        - name: EnglishAuction721
+          file: ./abis/EnglishAuction721.json
+        - name: EnglishAuction1155
+          file: ./abis/EnglishAuction1155.json
+        - name: SealedBidAuctionV1721
+          file: ./abis/SealedBidAuctionV1721.json
+        - name: SealedBidAuctionV11155
+          file: ./abis/SealedBidAuctionV11155.json
+        - name: SealedBidAuctionV2721
+          file: ./abis/SealedBidAuctionV2721.json
+        - name: SealedBidAuctionV21155
+          file: ./abis/SealedBidAuctionV21155.json
+        - name: VickreyAuction721
+          file: ./abis/VickreyAuction721.json
+        - name: VickreyAuction1155
+          file: ./abis/VickreyAuction1155.json
+      eventHandlers:
+        - event: AuctionCreated(address,uint256)
+          handler: handleAuctionCreated
+        - event: AuctionFinalized(address,uint256)
+          handler: handleAuctionFinalized
+        - event: BidAuction(address,uint256,address,uint256)
+          handler: handleBidAuction
+        - event: Paused(address)
+          handler: handlePaused
+        - event: RevealAuction(address,uint256,address,uint256)
+          handler: handleRevealAuction
+        - event: RevealStarted(address,uint256)
+          handler: handleRevealStarted
+        - event: Unpaused(address)
+          handler: handleUnpaused
+        - event: UpdateAuction(address,uint256)
+          handler: handleUpdateAuction
+      file: ./src/auction-factory.ts

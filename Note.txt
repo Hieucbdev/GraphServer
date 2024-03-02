@@ -1,0 +1,84 @@
+Mỗi collection có bao nhiêu vickrey auction
+VickreyAuction có bao nhiêu collection
+
+Collection, Auction, 
+Collection từng loại auction tức là vickreyauction có bao nhiêu collection
+Auction từng loại collection tức là collection X có các thông số về vickrey như nào, 
+auction tổng hợp các collection tức là auction tổng không phân biệt loại vickrey hay gì thì có bao nhiêu collection
+
+C1:
+Collection{
+  address
+  vickreyNum
+  vickreyVolumnHistory
+  vickreyVolumnCurrent
+}
+AuctionCommon{
+  type: Vickrey/Dutch
+  collectionNum
+  auctionNum
+  volumnHistory
+  volumnCurrent
+}
+=> Lấy tổng sẽ phải query hàng đống
+
+C2: 
+Collection {
+  address
+  auctionNum
+  totalVolume
+  auctioncollection: [AuctionCollection]
+}
+AuctionCommon{
+  type
+  auctionNum
+  collectionNum
+  totalVolume
+  creatorNum
+  auctiondetail: [AuctionDetail]
+}
+AuctionCommonCollection {
+  type
+  collection: Collection
+  auctionCount
+  totalVolumn
+  creatorNum
+}
+=> K cần lấy tổng mọi loại auction + mọi loại collection. K cần lấy auction detail của 1 collection 
+
+AuctionDetail {
+  type:
+  creator:
+  status: đang diễn ra / ended 
+  thông tin nft 1155 hay 721
+  mọi trường auction
+  giá chốt mua
+  Trade: [Trade]
+}
+Trade {
+  bidder
+  nftseller
+  nft là gì
+  giá tiền
+}
+User {
+  auctiondetail: [AuctionDetail]
+  auctioncollection: [AuctionCommonUser]
+}
+AuctionCommonUser {
+  type
+  user: User
+  auctionCount
+}
+NFT {
+  id
+  address
+  auctiondetail: [AuctionDetail]
+  auction: Auction
+}
+=> //!!!! Test thử xem query lịch sử và thống kê các loại được K?
+Collection: K có lịch sử, thống kê lấy luôn trong entity Collection
+VickreyAuction: Có lịch sử và thống kê đầu lấy từ entity AuctionCommon
+User: Lịch sử trong auctiondetail entity User, thống kê cũng v
+NFT: Lịch sử trong entity NFT, k có thống kê
+=> Chốt r
