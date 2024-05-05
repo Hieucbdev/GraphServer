@@ -449,45 +449,6 @@ export class VickreyAuction1155 extends ethereum.SmartContract {
     );
   }
 
-  getEstimatedBidPrice(
-    _bidder: Address,
-    _bid: BigInt,
-    _subSalt: Bytes,
-  ): BigInt {
-    let result = super.call(
-      "getEstimatedBidPrice",
-      "getEstimatedBidPrice(address,uint256,bytes32):(uint256)",
-      [
-        ethereum.Value.fromAddress(_bidder),
-        ethereum.Value.fromUnsignedBigInt(_bid),
-        ethereum.Value.fromFixedBytes(_subSalt),
-      ],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getEstimatedBidPrice(
-    _bidder: Address,
-    _bid: BigInt,
-    _subSalt: Bytes,
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getEstimatedBidPrice",
-      "getEstimatedBidPrice(address,uint256,bytes32):(uint256)",
-      [
-        ethereum.Value.fromAddress(_bidder),
-        ethereum.Value.fromUnsignedBigInt(_bid),
-        ethereum.Value.fromFixedBytes(_subSalt),
-      ],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   getNFTInfo(): VickreyAuction1155__getNFTInfoResult {
     let result = super.call(
       "getNFTInfo",
@@ -521,52 +482,6 @@ export class VickreyAuction1155 extends ethereum.SmartContract {
     );
   }
 
-  getRemainingBidTime(): BigInt {
-    let result = super.call(
-      "getRemainingBidTime",
-      "getRemainingBidTime():(uint256)",
-      [],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRemainingBidTime(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRemainingBidTime",
-      "getRemainingBidTime():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getRemainingRevealTime(): BigInt {
-    let result = super.call(
-      "getRemainingRevealTime",
-      "getRemainingRevealTime():(uint256)",
-      [],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRemainingRevealTime(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRemainingRevealTime",
-      "getRemainingRevealTime():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   isClaimed(): boolean {
     let result = super.call("isClaimed", "isClaimed():(bool)", []);
 
@@ -575,41 +490,6 @@ export class VickreyAuction1155 extends ethereum.SmartContract {
 
   try_isClaimed(): ethereum.CallResult<boolean> {
     let result = super.tryCall("isClaimed", "isClaimed():(bool)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  isFirstOrHighest(_bidder: Address, _bid: BigInt, _subSalt: Bytes): boolean {
-    let result = super.call(
-      "isFirstOrHighest",
-      "isFirstOrHighest(address,uint256,bytes32):(bool)",
-      [
-        ethereum.Value.fromAddress(_bidder),
-        ethereum.Value.fromUnsignedBigInt(_bid),
-        ethereum.Value.fromFixedBytes(_subSalt),
-      ],
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_isFirstOrHighest(
-    _bidder: Address,
-    _bid: BigInt,
-    _subSalt: Bytes,
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isFirstOrHighest",
-      "isFirstOrHighest(address,uint256,bytes32):(bool)",
-      [
-        ethereum.Value.fromAddress(_bidder),
-        ethereum.Value.fromUnsignedBigInt(_bid),
-        ethereum.Value.fromFixedBytes(_subSalt),
-      ],
-    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }

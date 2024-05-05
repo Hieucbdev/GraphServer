@@ -1,38 +1,42 @@
 type Collection @entity {
   id: Bytes! # <collection address>
-  totalAuctionCount: Int!
-  totalAuctionVolume: BigInt!
-  auctionCollection: [AuctionCommonCollection!]! @derivedFrom(field: "collection")
 }
-type AuctionCommonCollection @entity {
-  id: String! # <enum auction type>_<collection address>
+# Cứ 1 Stat tạo ra mà liên quan đến user là phải được add vào user rồi, lúc edit Stat của user sẽ k cần add nữa. Tạo auction là có stat cho collection rồi, lúc finalize chỉ udpate thôi
+type Stat @entity {
+  id: String! # <auction type>_<collection 0/bid 1/create 2>_<entity address>
   auctionType: Int8! # 0 1 2 3 4 5 6 7 8 9
-  collection: Collection!
-  auctionCount: Int!
-  volume: BigInt!
+  entityAddress: Bytes!
+  auctionCount: Int! # Sang user sẽ thành số lần bid, không phải số auctionbid
+  statType: Int8! # 0 là colection, 1 là bid, 2 là create
+  volume: [Volume!]! 
+}
+# Cứ 1 volume tạo ra là nó phải luôn được add vào stat hoặc auctioncommon rồi, lúc edit sẽ k cần add nữa
+type Volume @entity {
+  id: String! # <Stat id/auctiontpye>_<payment token>
+  paymentToken: Bytes!
+  amount: BigInt!
 }
 type AuctionCommon @entity {
   id: String!
-  auctionCount: Int!
   collectionCount: Int!
-  volume: BigInt!
+  collectionList: [Collection!]!
   creatorCount: Int!
-  creatorList: [Bytes!]!
-  collectionList: [Bytes!]!
+  creatorList: [User!]!
+  auctionCount: Int!
+  volume: [Volume!]!
 }
 type AuctionDetail @entity {
   id: Bytes! # <auction address>
   auctionType: Int8!
-  auctionCreator: User!
-  hash: Bytes!
   status: Int # 0 là mới tạo, 1 là đã end
+  auctionCreator: User!
   collectionAddress: [Bytes!]!
   nftIds: [BigInt!]!
   nftCount: [BigInt!]!
-  trade: [Trade!]! @derivedFrom(field: "auctionDetail") # Tự lấy từ từ tường auctionDetail của 1 trade khi nó mới đươc tạo ra 
+  trade: [Trade!]! @derivedFrom(field: "auctionDetail")
   timestamp: BigInt!
 
-  # Thông tin về từng auction hiện tại lấy trong contract 
+  # Thông tin về từng auction hiện tại lấy trong contract gom chung
   # minimumPrice, startingPrice, stepDuration, paymentToken, isEnded
   # currentBidder, currentBid, startTime, endTime, remainingBidTime
   # getRemainingRevealTime, revealBlockNum
@@ -42,13 +46,11 @@ type AuctionDetail @entity {
   startingPrice: BigInt!
   stepDuration: BigInt!
   paymentToken: Bytes!
-  isEnded: Boolean!
+  isEnded: Boolean! #!! Có thể gộp cái này với status => bỏ
   currentBidder: Bytes!
   currentBid: BigInt!
   startTime: BigInt!
   endTime: BigInt!
-  remainingBidTime: BigInt!
-  remainingRevealTime: BigInt!
   revealBlockNum: BigInt!
   bidStep: BigInt!
   revealStep: BigInt!
@@ -56,9 +58,9 @@ type AuctionDetail @entity {
 }
 type Trade @entity {
   id: String! # <user address>_<auction address>
-  isWin: Boolean
+  state: Int8! # 0 là tạo, 1 là bid, 2 là thắng auction
   hash: [Bytes!]!
-  auctioneer: Bytes!
+  auctioneer: User!
   bidder: User!
   price: [BigInt!]!
   auctionDetail: AuctionDetail!
@@ -66,23 +68,14 @@ type Trade @entity {
 }
 type User @entity {
   id: Bytes! # <user address>
-  auctionOwnedCount: Int!
-  auctionBiddedCount: Int!
-  auctionVolume: BigInt! # Chỉ tính owned auction
-  bidVolume: BigInt! # Chỉ tính bid volume
   auctionOwned: [AuctionDetail!]! @derivedFrom(field: "auctionCreator")
   auctionBidded: [AuctionDetail!]!
-  auctionOwnedStats: [AuctionOwnedUser!]! @derivedFrom(field: "user")
+  biddedCollection: [Collection!]!
+  ownedCollection: [Collection!]!
+  ownedCollectionCount: Int!
+  biddedCollectionCount: Int!
+  stats: [Stat!]!
   trade: [Trade!]! @derivedFrom(field: "bidder")
-  biddedCollection: [Bytes!]!
-  ownedCollection: [Bytes!]!
-}
-type AuctionOwnedUser @entity {
-  id: String! # <enum auction type>_<user address>
-  user: User!
-  auctionType: Int8!
-  auctionCount: Int!
-  volume: BigInt!
 }
 type NFT @entity {
   id: String! # <address>_<tokenid>

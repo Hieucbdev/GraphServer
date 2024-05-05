@@ -82,3 +82,51 @@ VickreyAuction: Có lịch sử và thống kê đầu lấy từ entity Auction
 User: Lịch sử trong auctiondetail entity User, thống kê cũng v
 NFT: Lịch sử trong entity NFT, k có thống kê
 => Chốt r
+
+
+-> Assembly script là 1 ngôn ngữ phát triển từ typescript nhưng có cú pháp chặt chẽ hơn
+
+-> Các loại volume:
+Collection
+AuctionType
+User
+
+Stat: []
+
+AuctionType thì 1 loại có bao nhiêu người thắng
+User thì 1 user bid bao nhiêu, 1 user đấu giá thu được bao nhiêu + auctiontype
+Collection + auctionType
+
+Volume {
+  paymentTokena
+  amount
+}
+
+-> Thiết kế lại:
+Mỗi object phân trang và search là 1 entity riêng hoặc chứa trong entity khác 
+
+Các object cần lấy:
+Collection của auction 
+Creator của auction
+Auction list theo từng loại
+Auction mà 1 người create ra
+Collection của auction mà 1 người create ra
+Collection của 1 auction mà 1 người từng bid
+Auction mà 1 người đã bid
+Auction của 1 collection
+
+-> 
+Collection
+User
+AuctionDetail
+AuctionCommon
+
+
+
+
+Bỏ đi các entity thừa
+Tối ưu hóa entity cho việc lấy bên trên
+
+Upgrade graph vào thời gian cuối của đồ án, ta k muốn nó lên production đâu
+Upgrade là để thành production nếu quá 10k query 1 tháng
+

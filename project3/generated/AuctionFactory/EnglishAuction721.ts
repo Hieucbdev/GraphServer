@@ -36,8 +36,7 @@ export class EnglishAuction721__getAuctionInfoResult {
   value4: BigInt;
   value5: BigInt;
   value6: BigInt;
-  value7: BigInt;
-  value8: Address;
+  value7: Address;
 
   constructor(
     value0: Address,
@@ -47,8 +46,7 @@ export class EnglishAuction721__getAuctionInfoResult {
     value4: BigInt,
     value5: BigInt,
     value6: BigInt,
-    value7: BigInt,
-    value8: Address,
+    value7: Address,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -58,7 +56,6 @@ export class EnglishAuction721__getAuctionInfoResult {
     this.value5 = value5;
     this.value6 = value6;
     this.value7 = value7;
-    this.value8 = value8;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -70,8 +67,7 @@ export class EnglishAuction721__getAuctionInfoResult {
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
     map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
-    map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
-    map.set("value8", ethereum.Value.fromAddress(this.value8));
+    map.set("value7", ethereum.Value.fromAddress(this.value7));
     return map;
   }
 
@@ -103,12 +99,8 @@ export class EnglishAuction721__getAuctionInfoResult {
     return this.value6;
   }
 
-  getValue7(): BigInt {
+  getValue7(): Address {
     return this.value7;
-  }
-
-  getValue8(): Address {
-    return this.value8;
   }
 }
 
@@ -285,7 +277,7 @@ export class EnglishAuction721 extends ethereum.SmartContract {
   getAuctionInfo(): EnglishAuction721__getAuctionInfoResult {
     let result = super.call(
       "getAuctionInfo",
-      "getAuctionInfo():(address,uint256,address,uint256,uint256,uint256,uint256,uint256,address)",
+      "getAuctionInfo():(address,uint256,address,uint256,uint256,uint256,uint256,address)",
       [],
     );
 
@@ -297,15 +289,14 @@ export class EnglishAuction721 extends ethereum.SmartContract {
       result[4].toBigInt(),
       result[5].toBigInt(),
       result[6].toBigInt(),
-      result[7].toBigInt(),
-      result[8].toAddress(),
+      result[7].toAddress(),
     );
   }
 
   try_getAuctionInfo(): ethereum.CallResult<EnglishAuction721__getAuctionInfoResult> {
     let result = super.tryCall(
       "getAuctionInfo",
-      "getAuctionInfo():(address,uint256,address,uint256,uint256,uint256,uint256,uint256,address)",
+      "getAuctionInfo():(address,uint256,address,uint256,uint256,uint256,uint256,address)",
       [],
     );
     if (result.reverted) {
@@ -321,8 +312,7 @@ export class EnglishAuction721 extends ethereum.SmartContract {
         value[4].toBigInt(),
         value[5].toBigInt(),
         value[6].toBigInt(),
-        value[7].toBigInt(),
-        value[8].toAddress(),
+        value[7].toAddress(),
       ),
     );
   }
@@ -356,29 +346,6 @@ export class EnglishAuction721 extends ethereum.SmartContract {
         value[1].toBigIntArray(),
       ),
     );
-  }
-
-  getRemainingTime(): BigInt {
-    let result = super.call(
-      "getRemainingTime",
-      "getRemainingTime():(uint256)",
-      [],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRemainingTime(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRemainingTime",
-      "getRemainingTime():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   isAuctionOngoing(): boolean {
@@ -665,12 +632,12 @@ export class InitializeCallParamsStruct extends ethereum.Tuple {
     return this[1].toBigInt();
   }
 
-  get bidStepPercent(): BigInt {
-    return this[2].toBigInt();
+  get paymentToken(): Address {
+    return this[2].toAddress();
   }
 
-  get paymentToken(): Address {
-    return this[3].toAddress();
+  get waitBeforeStart(): BigInt {
+    return this[3].toBigInt();
   }
 }
 

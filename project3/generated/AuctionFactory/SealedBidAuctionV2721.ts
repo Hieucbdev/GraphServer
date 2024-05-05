@@ -33,24 +33,26 @@ export class SealedBidAuctionV2721__getAuctionInfoResult {
   value1: BigInt;
   value2: BigInt;
   value3: BigInt;
-  value4: Address;
-  value5: BigInt;
+  value4: BigInt;
+  value5: Address;
   value6: BigInt;
   value7: BigInt;
-  value8: Address;
-  value9: boolean;
+  value8: BigInt;
+  value9: Address;
+  value10: boolean;
 
   constructor(
     value0: Address,
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: Address,
-    value5: BigInt,
+    value4: BigInt,
+    value5: Address,
     value6: BigInt,
     value7: BigInt,
-    value8: Address,
-    value9: boolean,
+    value8: BigInt,
+    value9: Address,
+    value10: boolean,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -62,6 +64,7 @@ export class SealedBidAuctionV2721__getAuctionInfoResult {
     this.value7 = value7;
     this.value8 = value8;
     this.value9 = value9;
+    this.value10 = value10;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -70,12 +73,13 @@ export class SealedBidAuctionV2721__getAuctionInfoResult {
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
-    map.set("value4", ethereum.Value.fromAddress(this.value4));
-    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
+    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
+    map.set("value5", ethereum.Value.fromAddress(this.value5));
     map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
     map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
-    map.set("value8", ethereum.Value.fromAddress(this.value8));
-    map.set("value9", ethereum.Value.fromBoolean(this.value9));
+    map.set("value8", ethereum.Value.fromUnsignedBigInt(this.value8));
+    map.set("value9", ethereum.Value.fromAddress(this.value9));
+    map.set("value10", ethereum.Value.fromBoolean(this.value10));
     return map;
   }
 
@@ -95,11 +99,11 @@ export class SealedBidAuctionV2721__getAuctionInfoResult {
     return this.value3;
   }
 
-  getValue4(): Address {
+  getValue4(): BigInt {
     return this.value4;
   }
 
-  getValue5(): BigInt {
+  getValue5(): Address {
     return this.value5;
   }
 
@@ -111,12 +115,16 @@ export class SealedBidAuctionV2721__getAuctionInfoResult {
     return this.value7;
   }
 
-  getValue8(): Address {
+  getValue8(): BigInt {
     return this.value8;
   }
 
-  getValue9(): boolean {
+  getValue9(): Address {
     return this.value9;
+  }
+
+  getValue10(): boolean {
+    return this.value10;
   }
 }
 
@@ -274,7 +282,7 @@ export class SealedBidAuctionV2721 extends ethereum.SmartContract {
   getAuctionInfo(): SealedBidAuctionV2721__getAuctionInfoResult {
     let result = super.call(
       "getAuctionInfo",
-      "getAuctionInfo():(address,uint256,uint256,uint256,address,uint256,uint256,uint256,address,bool)",
+      "getAuctionInfo():(address,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,address,bool)",
       [],
     );
 
@@ -283,19 +291,20 @@ export class SealedBidAuctionV2721 extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toAddress(),
-      result[5].toBigInt(),
+      result[4].toBigInt(),
+      result[5].toAddress(),
       result[6].toBigInt(),
       result[7].toBigInt(),
-      result[8].toAddress(),
-      result[9].toBoolean(),
+      result[8].toBigInt(),
+      result[9].toAddress(),
+      result[10].toBoolean(),
     );
   }
 
   try_getAuctionInfo(): ethereum.CallResult<SealedBidAuctionV2721__getAuctionInfoResult> {
     let result = super.tryCall(
       "getAuctionInfo",
-      "getAuctionInfo():(address,uint256,uint256,uint256,address,uint256,uint256,uint256,address,bool)",
+      "getAuctionInfo():(address,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,address,bool)",
       [],
     );
     if (result.reverted) {
@@ -308,12 +317,13 @@ export class SealedBidAuctionV2721 extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toAddress(),
-        value[5].toBigInt(),
+        value[4].toBigInt(),
+        value[5].toAddress(),
         value[6].toBigInt(),
         value[7].toBigInt(),
-        value[8].toAddress(),
-        value[9].toBoolean(),
+        value[8].toBigInt(),
+        value[9].toAddress(),
+        value[10].toBoolean(),
       ),
     );
   }
@@ -347,52 +357,6 @@ export class SealedBidAuctionV2721 extends ethereum.SmartContract {
         value[1].toBigIntArray(),
       ),
     );
-  }
-
-  getRemainingBidTime(): BigInt {
-    let result = super.call(
-      "getRemainingBidTime",
-      "getRemainingBidTime():(uint256)",
-      [],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRemainingBidTime(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRemainingBidTime",
-      "getRemainingBidTime():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getRemainingRevealTime(): BigInt {
-    let result = super.call(
-      "getRemainingRevealTime",
-      "getRemainingRevealTime():(uint256)",
-      [],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRemainingRevealTime(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRemainingRevealTime",
-      "getRemainingRevealTime():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   isEnded(): boolean {
@@ -488,6 +452,21 @@ export class SealedBidAuctionV2721 extends ethereum.SmartContract {
 
   try_revealStep(): ethereum.CallResult<BigInt> {
     let result = super.tryCall("revealStep", "revealStep():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  startTime(): BigInt {
+    let result = super.call("startTime", "startTime():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_startTime(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("startTime", "startTime():(uint256)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -630,6 +609,10 @@ export class InitializeCallParamsStruct extends ethereum.Tuple {
 
   get paymentToken(): Address {
     return this[3].toAddress();
+  }
+
+  get waitBeforeStart(): BigInt {
+    return this[4].toBigInt();
   }
 }
 

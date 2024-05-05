@@ -237,16 +237,19 @@ export class UpdateAuction__Params {
 export class AuctionFactory__englishAdminParamsResult {
   value0: BigInt;
   value1: BigInt;
+  value2: BigInt;
 
-  constructor(value0: BigInt, value1: BigInt) {
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     return map;
   }
 
@@ -256,6 +259,10 @@ export class AuctionFactory__englishAdminParamsResult {
 
   getFeePercent(): BigInt {
     return this.value1;
+  }
+
+  getBidStepPercent(): BigInt {
+    return this.value2;
   }
 }
 
@@ -337,20 +344,21 @@ export class AuctionFactory extends ethereum.SmartContract {
   englishAdminParams(): AuctionFactory__englishAdminParamsResult {
     let result = super.call(
       "englishAdminParams",
-      "englishAdminParams():(uint256,uint256)",
+      "englishAdminParams():(uint256,uint256,uint256)",
       [],
     );
 
     return new AuctionFactory__englishAdminParamsResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
+      result[2].toBigInt(),
     );
   }
 
   try_englishAdminParams(): ethereum.CallResult<AuctionFactory__englishAdminParamsResult> {
     let result = super.tryCall(
       "englishAdminParams",
-      "englishAdminParams():(uint256,uint256)",
+      "englishAdminParams():(uint256,uint256,uint256)",
       [],
     );
     if (result.reverted) {
@@ -361,6 +369,7 @@ export class AuctionFactory extends ethereum.SmartContract {
       new AuctionFactory__englishAdminParamsResult(
         value[0].toBigInt(),
         value[1].toBigInt(),
+        value[2].toBigInt(),
       ),
     );
   }
@@ -730,6 +739,10 @@ export class InitializeCall_englishAdminParamsStruct extends ethereum.Tuple {
   get feePercent(): BigInt {
     return this[1].toBigInt();
   }
+
+  get bidStepPercent(): BigInt {
+    return this[2].toBigInt();
+  }
 }
 
 export class InitializeCall_vickreyAdminParamsStruct extends ethereum.Tuple {
@@ -1055,6 +1068,10 @@ export class SetEnglishAdminParamsCall_englishAdminParamsStruct extends ethereum
 
   get feePercent(): BigInt {
     return this[1].toBigInt();
+  }
+
+  get bidStepPercent(): BigInt {
+    return this[2].toBigInt();
   }
 }
 

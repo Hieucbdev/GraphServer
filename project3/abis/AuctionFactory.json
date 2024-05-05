@@ -1,7 +1,19 @@
 [
-  { "inputs": [], "name": "InvalidAuctionType", "type": "error" },
-  { "inputs": [], "name": "InvalidReceiveData", "type": "error" },
-  { "inputs": [], "name": "NotCallable", "type": "error" },
+  {
+    "inputs": [],
+    "name": "InvalidAuctionType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidReceiveData",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotCallable",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -201,7 +213,13 @@
   {
     "inputs": [],
     "name": "WETH_ADDRESS",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -214,15 +232,33 @@
       }
     ],
     "name": "auctionImplementation",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "auctionType", "type": "uint256" },
-      { "internalType": "address", "name": "bidder", "type": "address" },
-      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "auctionType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "bidder",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
     "name": "bidAuctionInFactory",
     "outputs": [],
@@ -238,14 +274,27 @@
         "name": "minimumRemainingTime",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "feePercent", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "feePercent",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bidStepPercent",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "auctionType", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "auctionType",
+        "type": "uint256"
+      }
     ],
     "name": "finalizeAuctionInFactory",
     "outputs": [],
@@ -271,7 +320,16 @@
             "name": "minimumRemainingTime",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "feePercent", "type": "uint256" }
+          {
+            "internalType": "uint256",
+            "name": "feePercent",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bidStepPercent",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct IAuctionFactory.EnglishParamsAdmin",
         "name": "_englishAdminParams",
@@ -299,7 +357,11 @@
         "name": "_vickreyAdminParams",
         "type": "tuple"
       },
-      { "internalType": "address", "name": "_WETH_ADDRESS", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_WETH_ADDRESS",
+        "type": "address"
+      }
     ],
     "name": "initialize",
     "outputs": [],
@@ -313,7 +375,11 @@
         "name": "",
         "type": "uint8"
       },
-      { "internalType": "bytes", "name": "", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
     ],
     "name": "innerCreateAuction",
     "outputs": [],
@@ -323,59 +389,157 @@
   {
     "inputs": [],
     "name": "isLocked",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "operator", "type": "address" },
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256[]", "name": "ids", "type": "uint256[]" },
-      { "internalType": "uint256[]", "name": "values", "type": "uint256[]" },
-      { "internalType": "bytes", "name": "_data", "type": "bytes" }
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "ids",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "values",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
     ],
     "name": "onERC1155BatchReceived",
-    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "operator", "type": "address" },
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "id", "type": "uint256" },
-      { "internalType": "uint256", "name": "value", "type": "uint256" },
-      { "internalType": "bytes", "name": "_data", "type": "bytes" }
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
     ],
     "name": "onERC1155Received",
-    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "operator", "type": "address" },
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
-      { "internalType": "bytes", "name": "_data", "type": "bytes" }
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
     ],
     "name": "onERC721Received",
-    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "ongoingAuction",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -389,7 +553,13 @@
   {
     "inputs": [],
     "name": "paused",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -402,9 +572,21 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "auctionType", "type": "uint256" },
-      { "internalType": "address", "name": "revealer", "type": "address" },
-      { "internalType": "uint256", "name": "actualAmount", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "auctionType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "revealer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "actualAmount",
+        "type": "uint256"
+      }
     ],
     "name": "revealAuctionInFactory",
     "outputs": [],
@@ -438,7 +620,16 @@
             "name": "minimumRemainingTime",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "feePercent", "type": "uint256" }
+          {
+            "internalType": "uint256",
+            "name": "feePercent",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bidStepPercent",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct IAuctionFactory.EnglishParamsAdmin",
         "name": "_englishAdminParams",
@@ -482,7 +673,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "auctionType", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "auctionType",
+        "type": "uint256"
+      }
     ],
     "name": "startRevealAuctionInFactory",
     "outputs": [],
@@ -491,7 +686,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -507,7 +706,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "auctionType", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "auctionType",
+        "type": "uint256"
+      }
     ],
     "name": "updateAuctionInFactory",
     "outputs": [],
@@ -539,13 +742,24 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" },
-      { "internalType": "address", "name": "receiver", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      }
     ],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
-  { "stateMutability": "payable", "type": "receive" }
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
 ]

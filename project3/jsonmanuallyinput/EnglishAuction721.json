@@ -194,11 +194,6 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -220,19 +215,6 @@
         "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRemainingTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -273,14 +255,14 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "bidStepPercent",
-            "type": "uint256"
-          },
-          {
             "internalType": "address",
             "name": "paymentToken",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "waitBeforeStart",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IAuctionFactory.EnglishParams",

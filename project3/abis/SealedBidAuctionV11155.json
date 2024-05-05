@@ -1,11 +1,39 @@
 [
-  { "inputs": [], "name": "InvalidProof", "type": "error" },
-  { "inputs": [], "name": "NotYetReveal", "type": "error" },
-  { "inputs": [], "name": "NotYetRevealBlock", "type": "error" },
-  { "inputs": [], "name": "RevealAlreadyStarted", "type": "error" },
-  { "inputs": [], "name": "RevealInProgress", "type": "error" },
-  { "inputs": [], "name": "RevealNotOver", "type": "error" },
-  { "inputs": [], "name": "RevealOver", "type": "error" },
+  {
+    "inputs": [],
+    "name": "InvalidProof",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotYetReveal",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotYetRevealBlock",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RevealAlreadyStarted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RevealInProgress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RevealNotOver",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RevealOver",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -20,23 +48,47 @@
     "type": "event"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "NFTContractAddress",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "basePrice",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "bidEndTime",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -51,41 +103,86 @@
     "inputs": [],
     "name": "getAuctionInfo",
     "outputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "bool", "name": "", "type": "bool" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_bidder", "type": "address" },
-      { "internalType": "uint256", "name": "_bid", "type": "uint256" },
-      { "internalType": "bytes32", "name": "_subSalt", "type": "bytes32" }
+      {
+        "internalType": "address",
+        "name": "_bidder",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_subSalt",
+        "type": "bytes32"
+      }
     ],
     "name": "getBidDepositAddr",
     "outputs": [
-      { "internalType": "bytes32", "name": "salt", "type": "bytes32" },
-      { "internalType": "address", "name": "depositAddr", "type": "address" }
+      {
+        "internalType": "bytes32",
+        "name": "salt",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "depositAddr",
+        "type": "address"
+      }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_bidder", "type": "address" },
-      { "internalType": "uint256", "name": "_bid", "type": "uint256" },
-      { "internalType": "bytes32", "name": "_subSalt", "type": "bytes32" }
-    ],
-    "name": "getEstimatedBidPrice",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -93,37 +190,47 @@
     "inputs": [],
     "name": "getNFTInfo",
     "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" },
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getRemainingBidTime",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRemainingRevealTime",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
-      { "internalType": "address", "name": "operator", "type": "address" },
-      { "internalType": "address", "name": "_factory", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
       {
         "internalType": "address[]",
         "name": "_NFTContractAddress",
         "type": "address[]"
       },
-      { "internalType": "uint256[]", "name": "_nftIds", "type": "uint256[]" },
+      {
+        "internalType": "uint256[]",
+        "name": "_nftIds",
+        "type": "uint256[]"
+      },
       {
         "internalType": "uint256[]",
         "name": "_nftValues",
@@ -131,7 +238,11 @@
       },
       {
         "components": [
-          { "internalType": "uint256", "name": "basePrice", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "bidDuration",
@@ -156,93 +267,204 @@
   {
     "inputs": [],
     "name": "isClaimed",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_bidder", "type": "address" },
-      { "internalType": "uint256", "name": "_bid", "type": "uint256" },
-      { "internalType": "bytes32", "name": "_subSalt", "type": "bytes32" }
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    "name": "isFirstOrHighest",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_bidder", "type": "address" },
-      { "internalType": "uint256", "name": "_bid", "type": "uint256" },
-      { "internalType": "bytes32", "name": "_subSalt", "type": "bytes32" }
+      {
+        "internalType": "address",
+        "name": "_bidder",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_subSalt",
+        "type": "bytes32"
+      }
     ],
     "name": "lateReveal",
     "outputs": [
-      { "internalType": "address", "name": "bidAddr", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "bidAddr",
+        "type": "address"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "nftIds",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "nftValues",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
-      { "internalType": "bytes", "name": "", "type": "bytes" }
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "nftValues",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
     ],
     "name": "onERC1155BatchReceived",
-    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "bytes", "name": "", "type": "bytes" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
     ],
     "name": "onERC1155Received",
-    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "ownerClaimNoBidder",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_bidder", "type": "address" },
-      { "internalType": "uint256", "name": "_bid", "type": "uint256" },
-      { "internalType": "bytes32", "name": "_subSalt", "type": "bytes32" },
+      {
+        "internalType": "address",
+        "name": "_bidder",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_subSalt",
+        "type": "bytes32"
+      },
       {
         "internalType": "uint256",
         "name": "_balAtSnapshot",
@@ -250,7 +472,11 @@
       },
       {
         "components": [
-          { "internalType": "bytes32", "name": "hash", "type": "bytes32" },
+          {
+            "internalType": "bytes32",
+            "name": "hash",
+            "type": "bytes32"
+          },
           {
             "internalType": "bytes32",
             "name": "parentHash",
@@ -261,8 +487,16 @@
             "name": "sha3Uncles",
             "type": "bytes32"
           },
-          { "internalType": "address", "name": "miner", "type": "address" },
-          { "internalType": "bytes32", "name": "stateRoot", "type": "bytes32" },
+          {
+            "internalType": "address",
+            "name": "miner",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "stateRoot",
+            "type": "bytes32"
+          },
           {
             "internalType": "bytes32",
             "name": "transactionsRoot",
@@ -273,19 +507,51 @@
             "name": "receiptsRoot",
             "type": "bytes32"
           },
-          { "internalType": "bytes", "name": "logsBloom", "type": "bytes" },
+          {
+            "internalType": "bytes",
+            "name": "logsBloom",
+            "type": "bytes"
+          },
           {
             "internalType": "uint256",
             "name": "difficulty",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "number", "type": "uint256" },
-          { "internalType": "uint256", "name": "gasLimit", "type": "uint256" },
-          { "internalType": "uint256", "name": "gasUsed", "type": "uint256" },
-          { "internalType": "uint256", "name": "timestamp", "type": "uint256" },
-          { "internalType": "bytes", "name": "extraData", "type": "bytes" },
-          { "internalType": "bytes32", "name": "mixHash", "type": "bytes32" },
-          { "internalType": "uint64", "name": "nonce", "type": "uint64" },
+          {
+            "internalType": "uint256",
+            "name": "number",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "gasLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "gasUsed",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "extraData",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "mixHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
           {
             "internalType": "uint256",
             "name": "baseFeePerGas",
@@ -328,15 +594,31 @@
             "name": "expectedRoot",
             "type": "bytes32"
           },
-          { "internalType": "bytes", "name": "key", "type": "bytes" },
-          { "internalType": "bytes[]", "name": "proof", "type": "bytes[]" },
-          { "internalType": "uint256", "name": "keyIndex", "type": "uint256" },
+          {
+            "internalType": "bytes",
+            "name": "key",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "proof",
+            "type": "bytes[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyIndex",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "proofIndex",
             "type": "uint256"
           },
-          { "internalType": "bytes", "name": "expectedValue", "type": "bytes" }
+          {
+            "internalType": "bytes",
+            "name": "expectedValue",
+            "type": "bytes"
+          }
         ],
         "internalType": "struct MPT.MerkleProof",
         "name": "_accountDataProof",
@@ -344,33 +626,67 @@
       }
     ],
     "name": "reveal",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "revealBlockNum",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "revealDuration",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_bidder", "type": "address" },
-      { "internalType": "uint256", "name": "_bid", "type": "uint256" },
-      { "internalType": "bytes32", "name": "_subSalt", "type": "bytes32" }
+      {
+        "internalType": "address",
+        "name": "_bidder",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_subSalt",
+        "type": "bytes32"
+      }
     ],
     "name": "revealNoVerify",
     "outputs": [
-      { "internalType": "address", "name": "bidAddr", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "bidAddr",
+        "type": "address"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -378,7 +694,13 @@
   {
     "inputs": [],
     "name": "revealStartTime",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -392,32 +714,63 @@
   {
     "inputs": [],
     "name": "storedBlockHash",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
     ],
     "name": "supportsInterface",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "topBid",
-    "outputs": [{ "internalType": "uint128", "name": "", "type": "uint128" }],
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "topBidder",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
-  { "stateMutability": "payable", "type": "receive" }
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
 ]

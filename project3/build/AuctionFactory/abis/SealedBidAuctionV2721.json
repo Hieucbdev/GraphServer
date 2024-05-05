@@ -154,6 +154,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -206,32 +211,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getRemainingBidTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRemainingRevealTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -274,6 +253,11 @@
             "internalType": "address",
             "name": "paymentToken",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "waitBeforeStart",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IAuctionFactory.SealedBidV2Params",
@@ -391,6 +375,19 @@
   {
     "inputs": [],
     "name": "revealStep",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "startTime",
     "outputs": [
       {
         "internalType": "uint256",

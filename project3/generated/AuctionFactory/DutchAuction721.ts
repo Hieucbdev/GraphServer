@@ -36,6 +36,7 @@ export class DutchAuction721__getAuctionInfoResult {
   value4: Address;
   value5: BigInt;
   value6: boolean;
+  value7: Address;
 
   constructor(
     value0: BigInt,
@@ -45,6 +46,7 @@ export class DutchAuction721__getAuctionInfoResult {
     value4: Address,
     value5: BigInt,
     value6: boolean,
+    value7: Address,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -53,6 +55,7 @@ export class DutchAuction721__getAuctionInfoResult {
     this.value4 = value4;
     this.value5 = value5;
     this.value6 = value6;
+    this.value7 = value7;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -64,6 +67,7 @@ export class DutchAuction721__getAuctionInfoResult {
     map.set("value4", ethereum.Value.fromAddress(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
     map.set("value6", ethereum.Value.fromBoolean(this.value6));
+    map.set("value7", ethereum.Value.fromAddress(this.value7));
     return map;
   }
 
@@ -94,37 +98,9 @@ export class DutchAuction721__getAuctionInfoResult {
   getValue6(): boolean {
     return this.value6;
   }
-}
 
-export class DutchAuction721__getCurrentStepDataResult {
-  value0: BigInt;
-  value1: BigInt;
-  value2: BigInt;
-
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    return map;
-  }
-
-  getCurrentPrice(): BigInt {
-    return this.value0;
-  }
-
-  getCurrentRemainingTime(): BigInt {
-    return this.value1;
-  }
-
-  getCurrentStep(): BigInt {
-    return this.value2;
+  getValue7(): Address {
+    return this.value7;
   }
 }
 
@@ -181,25 +157,10 @@ export class DutchAuction721 extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  factory(): Address {
-    let result = super.call("factory", "factory():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_factory(): ethereum.CallResult<Address> {
-    let result = super.tryCall("factory", "factory():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   getAuctionInfo(): DutchAuction721__getAuctionInfoResult {
     let result = super.call(
       "getAuctionInfo",
-      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,bool)",
+      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,bool,address)",
       [],
     );
 
@@ -211,13 +172,14 @@ export class DutchAuction721 extends ethereum.SmartContract {
       result[4].toAddress(),
       result[5].toBigInt(),
       result[6].toBoolean(),
+      result[7].toAddress(),
     );
   }
 
   try_getAuctionInfo(): ethereum.CallResult<DutchAuction721__getAuctionInfoResult> {
     let result = super.tryCall(
       "getAuctionInfo",
-      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,bool)",
+      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,bool,address)",
       [],
     );
     if (result.reverted) {
@@ -233,39 +195,7 @@ export class DutchAuction721 extends ethereum.SmartContract {
         value[4].toAddress(),
         value[5].toBigInt(),
         value[6].toBoolean(),
-      ),
-    );
-  }
-
-  getCurrentStepData(): DutchAuction721__getCurrentStepDataResult {
-    let result = super.call(
-      "getCurrentStepData",
-      "getCurrentStepData():(uint256,uint256,uint256)",
-      [],
-    );
-
-    return new DutchAuction721__getCurrentStepDataResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt(),
-    );
-  }
-
-  try_getCurrentStepData(): ethereum.CallResult<DutchAuction721__getCurrentStepDataResult> {
-    let result = super.tryCall(
-      "getCurrentStepData",
-      "getCurrentStepData():(uint256,uint256,uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new DutchAuction721__getCurrentStepDataResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt(),
+        value[7].toAddress(),
       ),
     );
   }
@@ -299,25 +229,6 @@ export class DutchAuction721 extends ethereum.SmartContract {
         value[1].toBigIntArray(),
       ),
     );
-  }
-
-  getTimeElapsed(): BigInt {
-    let result = super.call("getTimeElapsed", "getTimeElapsed():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_getTimeElapsed(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getTimeElapsed",
-      "getTimeElapsed():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   isEnded(): boolean {
@@ -587,5 +498,9 @@ export class InitializeCallParamsStruct extends ethereum.Tuple {
 
   get paymentToken(): Address {
     return this[4].toAddress();
+  }
+
+  get waitBeforeStart(): BigInt {
+    return this[5].toBigInt();
   }
 }

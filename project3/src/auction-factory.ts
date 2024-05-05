@@ -1,6 +1,5 @@
-import { BigInt, log, Bytes, Address, ethereum, store } from "@graphprotocol/graph-ts"
+import { BigInt, log, Bytes, Address, ethereum } from "@graphprotocol/graph-ts"
 import {
-  AuctionFactory,
   AuctionCreated,
   AuctionFinalized,
   BidAuction,
@@ -12,246 +11,167 @@ import {
   Unpaused,
   UpdateAuction
 } from "../generated/AuctionFactory/AuctionFactory"
-import { DutchAuction721 } from "../generated/DutchAuction721/DutchAuction721";
-import { DutchAuction1155 } from "../generated/DutchAuction1155/DutchAuction1155";
-import { EnglishAuction721 } from "../generated/EnglishAuction721/EnglishAuction721";
-import { EnglishAuction1155 } from "../generated/EnglishAuction1155/EnglishAuction1155";
-import { SealedBidAuctionV1721 } from "../generated/SealedBidAuctionV1721/SealedBidAuctionV1721";
-import { SealedBidAuctionV11155 } from "../generated/SealedBidAuctionV11155/SealedBidAuctionV11155";
-import { SealedBidAuctionV2721 } from "../generated/SealedBidAuctionV2721/SealedBidAuctionV2721";
-import { SealedBidAuctionV21155 } from "../generated/SealedBidAuctionV21155/SealedBidAuctionV21155";
-import { VickreyAuction721 } from "../generated/VickreyAuction721/VickreyAuction721";
-import { VickreyAuction1155 } from "../generated/VickreyAuction1155/VickreyAuction1155";
-import { Collection, AuctionCommonCollection, AuctionCommon, AuctionDetail, 
-  Trade, User, AuctionOwnedUser, NFT } from "../generated/schema";
+import { DutchAuction721 } from "../generated/AuctionFactory/DutchAuction721";
+import { DutchAuction1155 } from "../generated/AuctionFactory/DutchAuction1155";
+import { EnglishAuction721 } from "../generated/AuctionFactory/EnglishAuction721";
+import { EnglishAuction1155 } from "../generated/AuctionFactory/EnglishAuction1155";
+import { SealedBidAuctionV1721 } from "../generated/AuctionFactory/SealedBidAuctionV1721";
+import { SealedBidAuctionV11155 } from "../generated/AuctionFactory/SealedBidAuctionV11155";
+import { SealedBidAuctionV2721 } from "../generated/AuctionFactory/SealedBidAuctionV2721";
+import { SealedBidAuctionV21155 } from "../generated/AuctionFactory/SealedBidAuctionV21155";
+import { VickreyAuction721 } from "../generated/AuctionFactory/VickreyAuction721";
+import { VickreyAuction1155 } from "../generated/AuctionFactory/VickreyAuction1155";
+import { Stat, Volume, AuctionCommon, AuctionDetail, Trade, User, NFT, Collection } from "../generated/schema";
+
+function getDistinctAddresses(addresses: Array<Address>): Array<Address> {
+  let distinctAddresses: Array<Address> = new Array<Address>();
+  for (let i = 0; i < addresses.length; i++) {
+    let isDistinct = true;
+    for (let j = 0; j < distinctAddresses.length; j++) {
+      if (addresses[i] == distinctAddresses[j]) {
+        isDistinct = false;
+        break;
+      }
+    }
+    if (isDistinct) {
+      distinctAddresses.push(addresses[i]);
+    }
+  }
+  return distinctAddresses;
+}
 
 export function handleAuctionCreated(event: AuctionCreated): void {
   let nftAddresses: Array<Address> = [];
+  let auctionType = 0;
   let tokenIds: Array<BigInt> = [];
   let tokenCounts: Array<BigInt> = [];
-  let owner: ethereum.CallResult<Address> = new ethereum.CallResult();
   let isFailed = false;
-  if(event != null){
-    if(event.params.auctionType == BigInt.fromI32(0)) {
-      let auctionContract = EnglishAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(2)) {
-      let auctionContract = VickreyAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(4)) {
-      let auctionContract = DutchAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(6)) {
-      let auctionContract = SealedBidAuctionV1721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(8)) {
-      let auctionContract = SealedBidAuctionV2721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(1)) {
-      let auctionContract = EnglishAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        tokenCounts = nftInfo.value.getValue2();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(3)) {
-      let auctionContract = VickreyAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        tokenCounts = nftInfo.value.getValue2();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(5)) {
-      let auctionContract = DutchAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        tokenCounts = nftInfo.value.getValue2();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(7)) {
-      let auctionContract = SealedBidAuctionV11155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        tokenCounts = nftInfo.value.getValue2();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(9)) {
-      let auctionContract = SealedBidAuctionV21155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        tokenIds = nftInfo.value.getValue1();
-        tokenCounts = nftInfo.value.getValue2();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
+  if(event.params.auctionType == BigInt.fromI32(0)) {
+    let auctionContract = EnglishAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(2)) {
+    auctionType = 2;
+    let auctionContract = VickreyAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(4)) {
+    auctionType = 4;
+    let auctionContract = DutchAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(6)) {
+    auctionType = 6;
+    let auctionContract = SealedBidAuctionV1721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(8)) {
+    auctionType = 8;
+    let auctionContract = SealedBidAuctionV2721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(1)) {
+    auctionType = 1;
+    let auctionContract = EnglishAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+      tokenCounts = nftInfo.value.getValue2();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(3)) {
+    auctionType = 3;
+    let auctionContract = VickreyAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+      tokenCounts = nftInfo.value.getValue2();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(5)) {
+    auctionType = 5;
+    let auctionContract = DutchAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+      tokenCounts = nftInfo.value.getValue2();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(7)) {
+    auctionType = 7;
+    let auctionContract = SealedBidAuctionV11155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+      tokenCounts = nftInfo.value.getValue2();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(9)) {
+    auctionType = 9;
+    let auctionContract = SealedBidAuctionV21155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+      tokenIds = nftInfo.value.getValue1();
+      tokenCounts = nftInfo.value.getValue2();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
     }
   }
 
   if(isFailed == false){
-    for(let i = 0; i < nftAddresses.length; i++){
-      let collection = Collection.load(nftAddresses[i]);
-      if(!collection){
-        collection = new Collection(nftAddresses[i]);
-        collection.totalAuctionCount = 1;
-        collection.totalAuctionVolume = BigInt.fromI32(0);
-        collection.save();
-      } else {
-        collection.totalAuctionCount += 1;
-        collection.save();
-      }
-      let auctionCommonCollection = AuctionCommonCollection.load(`0_${nftAddresses[i].toHexString()}`);
-      if(!auctionCommonCollection) {
-        auctionCommonCollection = new AuctionCommonCollection(`0_${nftAddresses[i].toHexString()}`);
-        auctionCommonCollection.auctionType = 0;
-        auctionCommonCollection.auctionCount = 1;
-        auctionCommonCollection.volume = BigInt.fromI32(0);
-        auctionCommonCollection.collection = nftAddresses[i];
-        auctionCommonCollection.save();
-      } else {
-        auctionCommonCollection.auctionCount += 1;
-        auctionCommonCollection.save();
-      }
-    }
-    let auctionCommon = AuctionCommon.load("0");
-    if(!auctionCommon) {
-      auctionCommon = new AuctionCommon("0");
-      auctionCommon.auctionCount = 1;
-      auctionCommon.collectionCount = 1;
-      auctionCommon.creatorCount = 1;
-      auctionCommon.volume = BigInt.fromI32(0);
-      auctionCommon.creatorList = [owner.value];
-      auctionCommon.collectionList = changetype<Bytes[]>(nftAddresses);
-      auctionCommon.save();
-    } else {
-      auctionCommon.auctionCount += 1;
-      let creatorIndex = auctionCommon.creatorList.indexOf(owner.value);
-      if (creatorIndex == -1) {
-        let creatorList = auctionCommon.creatorList;
-        creatorList.push(owner.value);
-        auctionCommon.creatorCount += 1;
-        auctionCommon.creatorList = creatorList;
-      }
-      let collectionList = auctionCommon.collectionList;
-      for(let i = 0; i < nftAddresses.length; i++){
-        if (!collectionList.includes(nftAddresses[i])) {
-          collectionList.push(nftAddresses[i]);
-          auctionCommon.collectionCount += 1;
-        }
-      }
-      auctionCommon.collectionList = collectionList;
-      auctionCommon.save();
-    }
+    let distinctNFTAddresses = getDistinctAddresses(nftAddresses);
+
+    // AuctionDetail
     let auctionDetail = new AuctionDetail(event.params.auction);
-    auctionDetail.auctionType = 0;
-    auctionDetail.auctionCreator = owner.value;
+    auctionDetail.auctionType = auctionType;
     auctionDetail.status = 0;
-    auctionDetail.collectionAddress = changetype<Bytes[]>(nftAddresses);
+    auctionDetail.collectionAddress = changetype<Bytes[]>(distinctNFTAddresses);
     auctionDetail.nftIds = tokenIds;
     auctionDetail.nftCount = tokenCounts;
-    auctionDetail.hash = event.transaction.hash;
     auctionDetail.timestamp = event.block.timestamp;
 
     auctionDetail.minimumPrice = BigInt.fromI32(0);
@@ -263,8 +183,6 @@ export function handleAuctionCreated(event: AuctionCreated): void {
     auctionDetail.currentBid = BigInt.fromI32(0);
     auctionDetail.startTime = BigInt.fromI32(0);
     auctionDetail.endTime = BigInt.fromI32(0);
-    auctionDetail.remainingBidTime = BigInt.fromI32(0);
-    auctionDetail.remainingRevealTime = BigInt.fromI32(0);
     auctionDetail.revealBlockNum = BigInt.fromI32(0);
     auctionDetail.bidStep = BigInt.fromI32(0);
     auctionDetail.revealStep = BigInt.fromI32(0);
@@ -274,14 +192,14 @@ export function handleAuctionCreated(event: AuctionCreated): void {
       let auctionContract = EnglishAuction721.bind(event.params.auction);
       let auctionInfo = auctionContract.try_getAuctionInfo();
       if(!auctionInfo.reverted){
+        auctionDetail.auctionCreator = auctionInfo.value.getValue0();
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
         auctionDetail.currentBidder = auctionInfo.value.getValue2();
         auctionDetail.currentBid = auctionInfo.value.getValue3();
         auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.endTime = auctionInfo.value.getValue5();
         auctionDetail.bidStep = auctionInfo.value.getValue6();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue7();
-        auctionDetail.paymentToken = auctionInfo.value.getValue8();
+        auctionDetail.paymentToken = auctionInfo.value.getValue7();
       } else {
         log.warning("Cannot get auctionInfo", []);
       }
@@ -289,15 +207,16 @@ export function handleAuctionCreated(event: AuctionCreated): void {
       let auctionContract = VickreyAuction721.bind(event.params.auction);
       let auctionInfo = auctionContract.try_getAuctionInfo();
       if(!auctionInfo.reverted){
+        auctionDetail.auctionCreator = auctionInfo.value.getValue0();
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
         auctionDetail.stepDuration = auctionInfo.value.getValue2();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
         auctionDetail.currentBidder = auctionInfo.value.getValue6();
         auctionDetail.currentBid = auctionInfo.value.getValue7();
         auctionDetail.sndBid = auctionInfo.value.getValue8();
-        auctionDetail.isEnded = auctionInfo.value.getValue9();
+        auctionDetail.isEnded = auctionInfo.value.getValue9(); //!!!! Bỏ isEnded đi, dùng status
       } else {
         log.warning("Cannot get auctionInfo", []);
       }
@@ -312,6 +231,7 @@ export function handleAuctionCreated(event: AuctionCreated): void {
         auctionDetail.paymentToken = auctionInfo.value.getValue4();
         auctionDetail.startTime = auctionInfo.value.getValue5();
         auctionDetail.isEnded = auctionInfo.value.getValue6();
+        auctionDetail.auctionCreator = auctionInfo.value.getValue7();
       } else {
         log.warning("Cannot get nftinfo", []);
       }
@@ -319,14 +239,15 @@ export function handleAuctionCreated(event: AuctionCreated): void {
       let auctionContract = SealedBidAuctionV1721.bind(event.params.auction);
       let auctionInfo = auctionContract.try_getAuctionInfo();
       if(!auctionInfo.reverted){
+        auctionDetail.auctionCreator = auctionInfo.value.getValue0();
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
         auctionDetail.stepDuration = auctionInfo.value.getValue2();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
         auctionDetail.currentBidder = auctionInfo.value.getValue6();
         auctionDetail.currentBid = auctionInfo.value.getValue7();
-        auctionDetail.isEnded = auctionInfo.value.getValue8();
+        auctionDetail.isEnded = auctionInfo.value.getValue8(); //!!! bỏ isClaimed đi, dùng status
       } else {
         log.warning("Cannot get nftinfo", []);
       }
@@ -334,270 +255,274 @@ export function handleAuctionCreated(event: AuctionCreated): void {
       let auctionContract = SealedBidAuctionV2721.bind(event.params.auction);
       let auctionInfo = auctionContract.try_getAuctionInfo();
       if(!auctionInfo.reverted){
+        auctionDetail.auctionCreator = auctionInfo.value.getValue0();
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue2();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue3();
-        auctionDetail.paymentToken = auctionInfo.value.getValue4();
-        auctionDetail.bidStep = auctionInfo.value.getValue5();
-        auctionDetail.revealStep = auctionInfo.value.getValue6();
-        auctionDetail.currentBid = auctionInfo.value.getValue7();
-        auctionDetail.currentBidder = auctionInfo.value.getValue8();
-        auctionDetail.isEnded = auctionInfo.value.getValue9();
+        auctionDetail.startTime = auctionInfo.value.getValue2();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.stepDuration = auctionInfo.value.getValue4();
+        auctionDetail.paymentToken = auctionInfo.value.getValue5();
+        auctionDetail.bidStep = auctionInfo.value.getValue6();
+        auctionDetail.revealStep = auctionInfo.value.getValue7();
+        auctionDetail.currentBid = auctionInfo.value.getValue8();
+        auctionDetail.currentBidder = auctionInfo.value.getValue9();
+        auctionDetail.isEnded = auctionInfo.value.getValue10();
       } else {
         log.warning("Cannot get nftinfo", []);
       }
     }
     auctionDetail.save();
 
-    let user = User.load(owner.value);
-    if(!user){
-      user = new User(owner.value);
-      user.auctionOwnedCount = 1;
-      user.auctionBiddedCount = 0;
-      user.auctionVolume = BigInt.fromI32(0);
+    // Stat
+    for(let i = 0; i < distinctNFTAddresses.length; i++){
+      let collectionStat = Stat.load(`${auctionType}_0_${distinctNFTAddresses[i].toHexString()}`);
+      if(!collectionStat){
+        collectionStat = new Stat(`${auctionType}_0_${distinctNFTAddresses[i].toHexString()}`);
+        collectionStat.auctionType = auctionType;
+        collectionStat.entityAddress = distinctNFTAddresses[i];
+        collectionStat.auctionCount = 1;
+        collectionStat.statType = 0;
+        collectionStat.volume = [];
+      } else {
+        collectionStat.auctionCount += 1;
+      }
+      collectionStat.save();
+    }
+
+    // AuctionCommon
+    let auctionCommon = AuctionCommon.load(`${auctionType}`);
+    if(!auctionCommon){
+      auctionCommon = new AuctionCommon(`${auctionType}`);
+      if(tokenIds.length > nftAddresses.length){
+        auctionCommon.collectionCount = 1;
+      } else {
+        auctionCommon.collectionCount = distinctNFTAddresses.length;
+      }
+      auctionCommon.creatorCount = 1;
+      auctionCommon.creatorList = [auctionDetail.auctionCreator];
+      for(let i = 0; i < distinctNFTAddresses.length; i++){
+        let nftAddress = Collection.load(distinctNFTAddresses[i]);
+        if(!nftAddress) {
+          nftAddress = new Collection(distinctNFTAddresses[i]);
+          nftAddress.save();
+        }
+      }
+      auctionCommon.collectionList = changetype<Bytes[]>(distinctNFTAddresses);
+      auctionCommon.auctionCount = 1;
+      auctionCommon.volume = [];
+    } else {
+      let collectionList = auctionCommon.collectionList;
+      for(let i = 0; i < distinctNFTAddresses.length; i++){
+        if (!collectionList.includes(distinctNFTAddresses[i])) {
+          collectionList.push(distinctNFTAddresses[i]);
+          auctionCommon.collectionCount += 1;
+          let nftAddress = Collection.load(distinctNFTAddresses[i]);
+          if(!nftAddress) {
+            nftAddress = new Collection(distinctNFTAddresses[i]);
+            nftAddress.save();
+          }
+        }
+      }
+      auctionCommon.collectionList = collectionList;
+      auctionCommon.auctionCount += 1;
+    }
+    auctionCommon.save();
+    
+    // Trade
+    let trade = new Trade(`${auctionDetail.auctionCreator.toHexString()}_${event.params.auction.toHexString()}`);
+    trade.state = 0;
+    trade.hash = [event.transaction.hash];
+    trade.auctioneer = auctionDetail.auctionCreator;
+    trade.bidder = auctionDetail.auctionCreator;
+    trade.price = [BigInt.fromI32(0)];
+    trade.auctionDetail = event.params.auction;
+    trade.timestamp = [event.block.timestamp];
+    trade.save();
+
+    // User
+    let user = User.load(auctionDetail.auctionCreator);
+    if(!user) {
+      user = new User(auctionDetail.auctionCreator);
       user.auctionBidded = [];
-      user.bidVolume = BigInt.fromI32(0);
-      user.ownedCollection = changetype<Bytes[]>(nftAddresses);
       user.biddedCollection = [];
+      user.ownedCollectionCount = 1;
+      user.biddedCollectionCount = 0;
+      user.ownedCollection = changetype<Bytes[]>(distinctNFTAddresses);
+      user.stats = [];
     } else {
       let ownedCollection = user.ownedCollection;
-      for(let i = 0; i < nftAddresses.length; i++){
-        if (!ownedCollection.includes(nftAddresses[i])) {
-          ownedCollection.push(nftAddresses[i]);
+      for(let i = 0; i < distinctNFTAddresses.length; i++){
+        if (!ownedCollection.includes(distinctNFTAddresses[i])) {
+          ownedCollection.push(distinctNFTAddresses[i]);
+          user.ownedCollectionCount += 1;
         }
       }
       user.ownedCollection = ownedCollection;
-      user.auctionOwnedCount += 1;
     }
     user.save();
-    let auctionOwnedUser = AuctionOwnedUser.load(`0_${owner.value.toHexString()}`);
-    if(!auctionOwnedUser){
-      auctionOwnedUser = new AuctionOwnedUser(`0_${owner.value.toHexString()}`);
-      auctionOwnedUser.user = owner.value;
-      auctionOwnedUser.auctionType = 0;
-      auctionOwnedUser.auctionCount = 1;
-      auctionOwnedUser.volume = BigInt.fromI32(0);
-    }else {
-      auctionOwnedUser.auctionCount += 1;
+
+    // Stat User
+    let userStat = Stat.load(`${auctionType}_2_${auctionDetail.auctionCreator.toHexString()}`);
+    if(!userStat){
+      userStat = new Stat(`${auctionType}_2_${auctionDetail.auctionCreator.toHexString()}`);
+      userStat.auctionType = auctionType;
+      userStat.entityAddress = auctionDetail.auctionCreator;
+      userStat.auctionCount = 1;
+      userStat.statType = 2;
+      userStat.volume = [];
+      let stats = user.stats;
+      stats.push(userStat.id);
+      user.stats = stats;
+      user.save();
+    } else {
+      userStat.auctionCount += 1;
     }
-    auctionOwnedUser.save();
-    for(let i = 0; i < nftAddresses.length; i++){
-      let nft = NFT.load(`${nftAddresses[i].toHexString()}_${tokenIds[i].toString()}`);
-      if(!nft){
-        nft = new NFT(`${nftAddresses[i].toHexString()}_${tokenIds[i].toString()}`);
-        nft.address = nftAddresses[i];
-        nft.tokenId = tokenIds[i];
-        nft.auctionDetail = [event.params.auction];
-      } else {
-        let nftAuctionDetail = nft.auctionDetail;
-        nftAuctionDetail.push(nftAddresses[i]);
-        nft.auctionDetail = nftAuctionDetail;
+    userStat.save();
+
+    // NFT
+    if(tokenIds.length > nftAddresses.length){
+      for(let i = 0; i < tokenIds.length; i++){
+        let nft = NFT.load(`${nftAddresses[0].toHexString()}_${tokenIds[i].toString()}`);
+        if(!nft){
+          nft = new NFT(`${nftAddresses[0].toHexString()}_${tokenIds[i].toString()}`);
+          nft.address = nftAddresses[0];
+          nft.tokenId = tokenIds[i];
+          nft.auctionDetail = [event.params.auction];
+        } else {
+          let nftAuctionDetail = nft.auctionDetail;
+          nftAuctionDetail.push(event.params.auction);
+          nft.auctionDetail = nftAuctionDetail;
+        }
+        nft.save();
       }
-      nft.save();
+    } else {
+      for(let i = 0; i < nftAddresses.length; i++){
+        let nft = NFT.load(`${nftAddresses[i].toHexString()}_${tokenIds[i].toString()}`);
+        if(!nft){
+          nft = new NFT(`${nftAddresses[i].toHexString()}_${tokenIds[i].toString()}`);
+          nft.address = nftAddresses[i];
+          nft.tokenId = tokenIds[i];
+          nft.auctionDetail = [event.params.auction];
+        } else {
+          let nftAuctionDetail = nft.auctionDetail;
+          nftAuctionDetail.push(event.params.auction);
+          nft.auctionDetail = nftAuctionDetail;
+        }
+        nft.save();
+      }
     }
   }
 }
 
 export function handleBidAuction(event: BidAuction): void {
   let nftAddresses: Array<Address> = [];
-  let owner: ethereum.CallResult<Address> = new ethereum.CallResult();
+  let auctionType = 0;
   let isFailed = false;
-  if(event != null){
-    if(event.params.auctionType == BigInt.fromI32(0)) {
-      let auctionContract = EnglishAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(2)) {
-      let auctionContract = VickreyAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(4)) {
-      let auctionContract = DutchAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(6)) {
-      let auctionContract = SealedBidAuctionV1721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(8)) {
-      let auctionContract = SealedBidAuctionV2721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(1)) {
-      let auctionContract = EnglishAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(3)) {
-      let auctionContract = VickreyAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(5)) {
-      let auctionContract = DutchAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(7)) {
-      let auctionContract = SealedBidAuctionV11155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(9)) {
-      let auctionContract = SealedBidAuctionV21155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-        owner = auctionContract.try_owner();
-        if(owner.reverted){
-          log.warning("Cannot get owner", []);
-          isFailed = true;
-        }
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
+  if(event.params.auctionType == BigInt.fromI32(0)) {
+    let auctionContract = EnglishAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(2)) {
+    auctionType = 2;
+    let auctionContract = VickreyAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(4)) {
+    auctionType = 4;
+    let auctionContract = DutchAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(6)) {
+    auctionType = 6;
+    let auctionContract = SealedBidAuctionV1721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(8)) {
+    auctionType = 8;
+    let auctionContract = SealedBidAuctionV2721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(1)) {
+    auctionType = 1;
+    let auctionContract = EnglishAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(3)) {
+    auctionType = 3;
+    let auctionContract = VickreyAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(5)) {
+    auctionType = 5;
+    let auctionContract = DutchAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(7)) {
+    auctionType = 7;
+    let auctionContract = SealedBidAuctionV11155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(9)) {
+    auctionType = 9;
+    let auctionContract = SealedBidAuctionV21155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
     }
   }
-  
 
   if(isFailed == false){
-    let trade = Trade.load(`${event.params.bidder.toHexString()}_${event.params.auction.toHexString()}`);
-    if(!trade){
-      trade = new Trade(`${event.params.bidder.toHexString()}_${event.params.auction.toHexString()}`);
-      trade.isWin = false;
-      trade.hash = [event.transaction.hash];
-      trade.auctioneer = owner.value;
-      trade.bidder = owner.value;
-      trade.price = [event.params.amount];
-      trade.auctionDetail = event.params.auction;
-      trade.timestamp = [event.block.timestamp];
-    } else {
-      let price = trade.price;
-      price.push(event.params.amount);
-      trade.price = price;
-      let hash = trade.hash;
-      hash.push(event.transaction.hash);
-      trade.hash = hash;
-      let timestamp = trade.timestamp;
-      timestamp.push(event.block.timestamp);
-      trade.timestamp = timestamp;
-    }
-    trade.save();
+    let distinctNFTAddresses = getDistinctAddresses(nftAddresses);
 
-    let user = User.load(owner.value);
-    if(!user) {
-      user = new User(owner.value);
-      user.auctionOwnedCount = 0;
-      user.auctionBiddedCount = 1;
-      user.auctionVolume = BigInt.fromI32(0);
-      user.bidVolume = event.params.amount;
-      user.auctionBidded = [event.params.auction];
-      user.biddedCollection = changetype<Bytes[]>(nftAddresses);
-      user.ownedCollection = [];
-    } else {
-      user.auctionBiddedCount += 1;
-      user.bidVolume = user.bidVolume.plus(event.params.amount);
-      let auctionBidded = user.auctionBidded;
-      if (!auctionBidded.includes(event.params.auction)) {
-        auctionBidded.push(event.params.auction);
-      }
-      user.auctionBidded = auctionBidded;
-      let biddedCollection = user.biddedCollection;
-      for(let i = 0; i < nftAddresses.length; i++){
-        if(!biddedCollection.includes(nftAddresses[i])){
-          biddedCollection.push(nftAddresses[i]); 
-        }
-      }
-      user.biddedCollection = biddedCollection;
-    }
-    user.save();
+    let owner = Bytes.fromHexString("0x0000000000000000000000000000000000000000");
+    let paymentToken = Bytes.fromHexString("0x0000000000000000000000000000000000000000");
     let auctionDetail = AuctionDetail.load(event.params.auction);
     if(auctionDetail){
       if(event.params.auctionType == BigInt.fromI32(0) || event.params.auctionType == BigInt.fromI32(1)) {
@@ -610,8 +535,7 @@ export function handleBidAuction(event: BidAuction): void {
           auctionDetail.startTime = auctionInfo.value.getValue4();
           auctionDetail.endTime = auctionInfo.value.getValue5();
           auctionDetail.bidStep = auctionInfo.value.getValue6();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue7();
-          auctionDetail.paymentToken = auctionInfo.value.getValue8();
+          auctionDetail.paymentToken = auctionInfo.value.getValue7();
         } else {
           log.warning("Cannot get auctionInfo", []);
         }
@@ -621,8 +545,8 @@ export function handleBidAuction(event: BidAuction): void {
         if(!auctionInfo.reverted){
           auctionDetail.startingPrice = auctionInfo.value.getValue1();
           auctionDetail.stepDuration = auctionInfo.value.getValue2();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-          auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+          auctionDetail.endTime = auctionInfo.value.getValue3();
+          auctionDetail.startTime = auctionInfo.value.getValue4();
           auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
           auctionDetail.currentBidder = auctionInfo.value.getValue6();
           auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -651,8 +575,8 @@ export function handleBidAuction(event: BidAuction): void {
         if(!auctionInfo.reverted){
           auctionDetail.startingPrice = auctionInfo.value.getValue1();
           auctionDetail.stepDuration = auctionInfo.value.getValue2();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-          auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+          auctionDetail.endTime = auctionInfo.value.getValue3();
+          auctionDetail.startTime = auctionInfo.value.getValue4();
           auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
           auctionDetail.currentBidder = auctionInfo.value.getValue6();
           auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -665,14 +589,15 @@ export function handleBidAuction(event: BidAuction): void {
         let auctionInfo = auctionContract.try_getAuctionInfo();
         if(!auctionInfo.reverted){
           auctionDetail.startingPrice = auctionInfo.value.getValue1();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue2();
-          auctionDetail.remainingRevealTime = auctionInfo.value.getValue3();
-          auctionDetail.paymentToken = auctionInfo.value.getValue4();
-          auctionDetail.bidStep = auctionInfo.value.getValue5();
-          auctionDetail.revealStep = auctionInfo.value.getValue6();
-          auctionDetail.currentBid = auctionInfo.value.getValue7();
-          auctionDetail.currentBidder = auctionInfo.value.getValue8();
-          auctionDetail.isEnded = auctionInfo.value.getValue9();
+          auctionDetail.startTime = auctionInfo.value.getValue2();
+          auctionDetail.endTime = auctionInfo.value.getValue3();
+          auctionDetail.stepDuration = auctionInfo.value.getValue4();
+          auctionDetail.paymentToken = auctionInfo.value.getValue5();
+          auctionDetail.bidStep = auctionInfo.value.getValue6();
+          auctionDetail.revealStep = auctionInfo.value.getValue7();
+          auctionDetail.currentBid = auctionInfo.value.getValue8();
+          auctionDetail.currentBidder = auctionInfo.value.getValue9();
+          auctionDetail.isEnded = auctionInfo.value.getValue10();
         } else {
           log.warning("Cannot get nftinfo", []);
         }
@@ -681,129 +606,220 @@ export function handleBidAuction(event: BidAuction): void {
         auctionDetail.currentBid = event.params.amount;
         auctionDetail.currentBidder = event.params.bidder;
       }
+      paymentToken = auctionDetail.paymentToken;
+      owner = auctionDetail.auctionCreator;
       auctionDetail.save();
     }
+
+    // User
+    let user = User.load(event.params.bidder);
+    if(!user) {
+      user = new User(event.params.bidder);
+      user.auctionBidded = [event.params.auction];
+      for(let i = 0; i < distinctNFTAddresses.length; i++){
+        let nftAddress = Collection.load(distinctNFTAddresses[i]);
+        if(!nftAddress) {
+          nftAddress = new Collection(distinctNFTAddresses[i]);
+          nftAddress.save();
+        }
+      }
+      user.biddedCollection = changetype<Bytes[]>(distinctNFTAddresses);
+      user.ownedCollection = [];
+      user.ownedCollectionCount = 0;
+      user.biddedCollectionCount = distinctNFTAddresses.length;
+      user.stats = [];
+    } else {
+      let auctionBidded = user.auctionBidded;
+      if(!auctionBidded.includes(event.params.auction)){
+        auctionBidded.push(event.params.auction);
+      }
+      user.auctionBidded = auctionBidded;
+      let biddedCollection = user.biddedCollection;
+      for(let i = 0; i < distinctNFTAddresses.length; i++){
+        if(!biddedCollection.includes(distinctNFTAddresses[i])){
+          biddedCollection.push(distinctNFTAddresses[i]);
+          user.biddedCollectionCount += 1;
+          let nftAddress = Collection.load(distinctNFTAddresses[i]);
+          if(!nftAddress) {
+            nftAddress = new Collection(distinctNFTAddresses[i]);
+            nftAddress.save();
+          }
+        }
+      }
+      user.biddedCollection = biddedCollection;
+    }
+    user.save();
+    
+    // Stat User bid
+    let userBidStat = Stat.load(`${auctionType}_1_${event.params.bidder.toHexString()}`);
+    if(!userBidStat) {
+      userBidStat = new Stat(`${auctionType}_1_${event.params.bidder.toHexString()}`);
+      userBidStat.auctionType = auctionType;
+      userBidStat.entityAddress = event.params.bidder;
+      userBidStat.auctionCount = 1;
+      userBidStat.statType = 1;
+      userBidStat.volume = [];
+      let userStats = user.stats;
+      userStats.push(userBidStat.id);
+      user.stats = userStats;
+      user.save();
+    } else {
+      userBidStat.auctionCount += 1;
+    }
+    userBidStat.save();
+
+    // Volume user bid
+    let userBidVol = Volume.load(`${auctionType}_1_${event.params.bidder.toHexString()}_${paymentToken.toHexString()}`);
+    if(!userBidVol) {
+      userBidVol = new Volume(`${auctionType}_1_${event.params.bidder.toHexString()}_${paymentToken.toHexString()}`);
+      userBidVol.paymentToken = paymentToken;
+      userBidVol.amount = event.params.amount;
+      let userBidStatVol = userBidStat.volume;
+      userBidStatVol.push(`${auctionType}_1_${event.params.bidder.toHexString()}_${paymentToken.toHexString()}`);
+      userBidStat.volume = userBidStatVol;
+      userBidStat.save();
+    } else {
+      userBidVol.amount = userBidVol.amount.plus(event.params.amount);
+    }
+    userBidVol.save();
+
+    let trade = Trade.load(`${event.params.bidder.toHexString()}_${event.params.auction.toHexString()}`);
+    if(!trade){
+      trade = new Trade(`${event.params.bidder.toHexString()}_${event.params.auction.toHexString()}`);
+      trade.state = 1;
+      trade.hash = [event.transaction.hash];
+      trade.auctioneer = owner;
+      trade.bidder = owner;
+      trade.price = [event.params.amount];
+      trade.auctionDetail = event.params.auction;
+      trade.timestamp = [event.block.timestamp];
+    } else {
+      let hash = trade.hash;
+      hash.push(event.transaction.hash);
+      trade.hash = hash;
+      let price = trade.price;
+      price.push(event.params.amount);
+      trade.price = price;
+      let timestamp = trade.timestamp;
+      timestamp.push(event.block.timestamp);
+      trade.timestamp = timestamp;
+    }
+    trade.save();
   }
 }
 
 export function handleAuctionFinalized(event: AuctionFinalized): void {
   let nftAddresses: Array<Address> = [];
   let isFailed = false;
-  if(event != null){
-    if(event.params.auctionType == BigInt.fromI32(0)) {
-      let auctionContract = EnglishAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(2)) {
-      let auctionContract = VickreyAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(4)) {
-      let auctionContract = DutchAuction721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(6)) {
-      let auctionContract = SealedBidAuctionV1721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(8)) {
-      let auctionContract = SealedBidAuctionV2721.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(1)) {
-      let auctionContract = EnglishAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(3)) {
-      let auctionContract = VickreyAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(5)) {
-      let auctionContract = DutchAuction1155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(7)) {
-      let auctionContract = SealedBidAuctionV11155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
-    } else if(event.params.auctionType == BigInt.fromI32(9)) {
-      let auctionContract = SealedBidAuctionV21155.bind(event.params.auction);
-      let nftInfo = auctionContract.try_getNFTInfo();
-      if(!nftInfo.reverted){
-        nftAddresses = nftInfo.value.getValue0();
-      } else {
-        log.warning("Cannot get nftinfo", []);
-        isFailed = true;
-      }
+  let auctionType = 0;
+  if(event.params.auctionType == BigInt.fromI32(0)) {
+    let auctionContract = EnglishAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(2)) {
+    auctionType = 2;
+    let auctionContract = VickreyAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(4)) {
+    auctionType = 4;
+    let auctionContract = DutchAuction721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(6)) {
+    auctionType = 6;
+    let auctionContract = SealedBidAuctionV1721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(8)) {
+    auctionType = 8;
+    let auctionContract = SealedBidAuctionV2721.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(1)) {
+    auctionType = 1;
+    let auctionContract = EnglishAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(3)) {
+    auctionType = 3;
+    let auctionContract = VickreyAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(5)) {
+    auctionType = 5;
+    let auctionContract = DutchAuction1155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(7)) {
+    auctionType = 7;
+    let auctionContract = SealedBidAuctionV11155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
+    }
+  } else if(event.params.auctionType == BigInt.fromI32(9)) {
+    auctionType = 9;
+    let auctionContract = SealedBidAuctionV21155.bind(event.params.auction);
+    let nftInfo = auctionContract.try_getNFTInfo();
+    if(!nftInfo.reverted){
+      nftAddresses = nftInfo.value.getValue0();
+    } else {
+      log.warning("Cannot get nftinfo", []);
+      isFailed = true;
     }
   }
   if(!isFailed){
+    let distinctNFTAddresses = getDistinctAddresses(nftAddresses);
+
+    // AuctionDetail
     let auctionDetail = AuctionDetail.load(event.params.auction);
+    let paymentToken = Bytes.fromHexString("0x0000000000000000000000000000000000000000");
     if(auctionDetail){
-      for(let i = 0; i < nftAddresses.length; i++){
-        let collection = Collection.load(nftAddresses[i]);
-        if(collection){
-          collection.totalAuctionVolume = auctionDetail.currentBid.plus(collection.totalAuctionVolume);
-          collection.save();
-        }
-        let auctionCommonCollection = AuctionCommonCollection.load(`${event.params.auctionType}_${nftAddresses[i]}`);
-        if(auctionCommonCollection){
-          auctionCommonCollection.volume = auctionCommonCollection.volume.plus(auctionDetail.currentBid);
-          auctionCommonCollection.save();
-        }
-      }
-      let auctionCommon = AuctionCommon.load(`${event.params.auctionType}`);
-      if(auctionCommon){
-        auctionCommon.volume = auctionCommon.volume.plus(auctionDetail.currentBid);
-        auctionCommon.save();
-      }
       auctionDetail.status = 1;
-      
       if(event.params.auctionType == BigInt.fromI32(0) || event.params.auctionType == BigInt.fromI32(1)) {
         let auctionContract = EnglishAuction721.bind(event.params.auction);
         let auctionInfo = auctionContract.try_getAuctionInfo();
@@ -814,8 +830,7 @@ export function handleAuctionFinalized(event: AuctionFinalized): void {
           auctionDetail.startTime = auctionInfo.value.getValue4();
           auctionDetail.endTime = auctionInfo.value.getValue5();
           auctionDetail.bidStep = auctionInfo.value.getValue6();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue7();
-          auctionDetail.paymentToken = auctionInfo.value.getValue8();
+          auctionDetail.paymentToken = auctionInfo.value.getValue7();
         } else {
           log.warning("Cannot get auctionInfo", []);
         }
@@ -825,8 +840,8 @@ export function handleAuctionFinalized(event: AuctionFinalized): void {
         if(!auctionInfo.reverted){
           auctionDetail.startingPrice = auctionInfo.value.getValue1();
           auctionDetail.stepDuration = auctionInfo.value.getValue2();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-          auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+          auctionDetail.endTime = auctionInfo.value.getValue3();
+          auctionDetail.startTime = auctionInfo.value.getValue4();
           auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
           auctionDetail.currentBidder = auctionInfo.value.getValue6();
           auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -855,8 +870,8 @@ export function handleAuctionFinalized(event: AuctionFinalized): void {
         if(!auctionInfo.reverted){
           auctionDetail.startingPrice = auctionInfo.value.getValue1();
           auctionDetail.stepDuration = auctionInfo.value.getValue2();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-          auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+          auctionDetail.endTime = auctionInfo.value.getValue3();
+          auctionDetail.startTime = auctionInfo.value.getValue4();
           auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
           auctionDetail.currentBidder = auctionInfo.value.getValue6();
           auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -869,27 +884,87 @@ export function handleAuctionFinalized(event: AuctionFinalized): void {
         let auctionInfo = auctionContract.try_getAuctionInfo();
         if(!auctionInfo.reverted){
           auctionDetail.startingPrice = auctionInfo.value.getValue1();
-          auctionDetail.remainingBidTime = auctionInfo.value.getValue2();
-          auctionDetail.remainingRevealTime = auctionInfo.value.getValue3();
-          auctionDetail.paymentToken = auctionInfo.value.getValue4();
-          auctionDetail.bidStep = auctionInfo.value.getValue5();
-          auctionDetail.revealStep = auctionInfo.value.getValue6();
-          auctionDetail.currentBid = auctionInfo.value.getValue7();
-          auctionDetail.currentBidder = auctionInfo.value.getValue8();
-          auctionDetail.isEnded = auctionInfo.value.getValue9();
+          auctionDetail.startTime = auctionInfo.value.getValue2();
+          auctionDetail.endTime = auctionInfo.value.getValue3();
+          auctionDetail.stepDuration = auctionInfo.value.getValue4();
+          auctionDetail.paymentToken = auctionInfo.value.getValue5();
+          auctionDetail.bidStep = auctionInfo.value.getValue6();
+          auctionDetail.revealStep = auctionInfo.value.getValue7();
+          auctionDetail.currentBid = auctionInfo.value.getValue8();
+          auctionDetail.currentBidder = auctionInfo.value.getValue9();
+          auctionDetail.isEnded = auctionInfo.value.getValue10();
         } else {
           log.warning("Cannot get nftinfo", []);
         }
       }
       auctionDetail.save();
+      paymentToken = auctionDetail.auctionCreator;
 
+      // Trade
       if(auctionDetail.currentBidder != Bytes.fromHexString("0x0000000000000000000000000000000000000000")) {
-        let trade = Trade.load(`${auctionDetail.currentBidder}_${event.params.auction.toHexString()}`);
+        let trade = Trade.load(`${auctionDetail.currentBidder.toHexString()}_${event.params.auction.toHexString()}`);
         if(trade){
-          trade.isWin = true;
+          trade.state = 2;
           trade.save();
         }
       }
+
+      // Volume collection
+      // Stat collection
+      for(let i = 0; i < distinctNFTAddresses.length; i++){
+        let volumeCollection = Volume.load(`${auctionType}_0_${distinctNFTAddresses[i].toHexString()}_${paymentToken.toHexString()}`);
+        if(!volumeCollection) {
+          volumeCollection = new Volume(`${auctionType}_0_${distinctNFTAddresses[i].toHexString()}_${paymentToken.toHexString()}`);
+          volumeCollection.paymentToken = paymentToken;
+          volumeCollection.amount = auctionDetail.currentBid;
+        } else {
+          volumeCollection.amount = volumeCollection.amount.plus(auctionDetail.currentBid);
+        }
+        volumeCollection.save();
+        let stat = Stat.load(`${auctionType}_0_${distinctNFTAddresses[i].toHexString()}`);
+        if(stat) {
+          let statVolume = stat.volume;
+          statVolume.push(`${auctionType}_0_${distinctNFTAddresses[i].toHexString()}_${paymentToken.toHexString()}`);
+          stat.volume = statVolume;
+          stat.save();
+        }
+      }
+
+      // AuctionCommon
+      let auctionCommonVolume = Volume.load(`${auctionType}_${paymentToken.toHexString()}`);
+      if(!auctionCommonVolume) {
+        auctionCommonVolume = new Volume(`${auctionType}_${paymentToken.toHexString()}`);
+        auctionCommonVolume.paymentToken = paymentToken;
+        auctionCommonVolume.amount = auctionDetail.currentBid;
+        let auctionCommon = AuctionCommon.load(`${auctionType}`);
+        if(auctionCommon){
+          let auctionVol = auctionCommon.volume;
+          auctionVol.push(`${auctionType}_${paymentToken.toHexString()}`);
+          auctionCommon.volume = auctionVol;
+          auctionCommon.save();
+        }
+      } else {
+        auctionCommonVolume.amount = auctionCommonVolume.amount.plus(auctionDetail.currentBid);
+      }
+      auctionCommonVolume.save();
+
+      // Stat Volume user created
+      let ownedAuctionStat = Stat.load(`${auctionType}_2_${auctionDetail.auctionCreator.toHexString()}`);
+      let ownedAuctionVol = Volume.load(`${auctionType}_2_${auctionDetail.auctionCreator.toHexString()}_${paymentToken}`);
+      if(!ownedAuctionVol){
+        ownedAuctionVol = new Volume(`${auctionType}_2_${auctionDetail.auctionCreator.toHexString()}_${paymentToken}`);
+        ownedAuctionVol.paymentToken = paymentToken;
+        ownedAuctionVol.amount = auctionDetail.currentBid;
+        if(ownedAuctionStat){
+          let ownedAuctionStatVolume = ownedAuctionStat.volume;
+          ownedAuctionStatVolume.push(`${auctionType}_2_${auctionDetail.auctionCreator.toHexString()}_${paymentToken}`);
+          ownedAuctionStat.volume = ownedAuctionStatVolume;
+          ownedAuctionStat.save();
+        }
+      } else {
+        ownedAuctionVol.amount = ownedAuctionVol.amount.plus(auctionDetail.currentBid);
+      }
+      ownedAuctionVol.save();
     }
   }
 }
@@ -907,8 +982,7 @@ export function handleRevealAuction(event: RevealAuction): void {
         auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.endTime = auctionInfo.value.getValue5();
         auctionDetail.bidStep = auctionInfo.value.getValue6();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue7();
-        auctionDetail.paymentToken = auctionInfo.value.getValue8();
+        auctionDetail.paymentToken = auctionInfo.value.getValue7();
       } else {
         log.warning("Cannot get auctionInfo", []);
       }
@@ -918,8 +992,8 @@ export function handleRevealAuction(event: RevealAuction): void {
       if(!auctionInfo.reverted){
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
         auctionDetail.stepDuration = auctionInfo.value.getValue2();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
         auctionDetail.currentBidder = auctionInfo.value.getValue6();
         auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -948,8 +1022,8 @@ export function handleRevealAuction(event: RevealAuction): void {
       if(!auctionInfo.reverted){
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
         auctionDetail.stepDuration = auctionInfo.value.getValue2();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
         auctionDetail.currentBidder = auctionInfo.value.getValue6();
         auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -962,14 +1036,15 @@ export function handleRevealAuction(event: RevealAuction): void {
       let auctionInfo = auctionContract.try_getAuctionInfo();
       if(!auctionInfo.reverted){
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue2();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue3();
-        auctionDetail.paymentToken = auctionInfo.value.getValue4();
-        auctionDetail.bidStep = auctionInfo.value.getValue5();
-        auctionDetail.revealStep = auctionInfo.value.getValue6();
-        auctionDetail.currentBid = auctionInfo.value.getValue7();
-        auctionDetail.currentBidder = auctionInfo.value.getValue8();
-        auctionDetail.isEnded = auctionInfo.value.getValue9();
+        auctionDetail.startTime = auctionInfo.value.getValue2();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.stepDuration = auctionInfo.value.getValue4();
+        auctionDetail.paymentToken = auctionInfo.value.getValue5();
+        auctionDetail.bidStep = auctionInfo.value.getValue6();
+        auctionDetail.revealStep = auctionInfo.value.getValue7();
+        auctionDetail.currentBid = auctionInfo.value.getValue8();
+        auctionDetail.currentBidder = auctionInfo.value.getValue9();
+        auctionDetail.isEnded = auctionInfo.value.getValue10();
       } else {
         log.warning("Cannot get nftinfo", []);
       }
@@ -991,8 +1066,7 @@ export function handleRevealStarted(event: RevealStarted): void {
         auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.endTime = auctionInfo.value.getValue5();
         auctionDetail.bidStep = auctionInfo.value.getValue6();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue7();
-        auctionDetail.paymentToken = auctionInfo.value.getValue8();
+        auctionDetail.paymentToken = auctionInfo.value.getValue7();
       } else {
         log.warning("Cannot get auctionInfo", []);
       }
@@ -1002,8 +1076,8 @@ export function handleRevealStarted(event: RevealStarted): void {
       if(!auctionInfo.reverted){
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
         auctionDetail.stepDuration = auctionInfo.value.getValue2();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
         auctionDetail.currentBidder = auctionInfo.value.getValue6();
         auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -1032,8 +1106,8 @@ export function handleRevealStarted(event: RevealStarted): void {
       if(!auctionInfo.reverted){
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
         auctionDetail.stepDuration = auctionInfo.value.getValue2();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue3();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue4();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.revealBlockNum = auctionInfo.value.getValue5();
         auctionDetail.currentBidder = auctionInfo.value.getValue6();
         auctionDetail.currentBid = auctionInfo.value.getValue7();
@@ -1046,14 +1120,15 @@ export function handleRevealStarted(event: RevealStarted): void {
       let auctionInfo = auctionContract.try_getAuctionInfo();
       if(!auctionInfo.reverted){
         auctionDetail.startingPrice = auctionInfo.value.getValue1();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue2();
-        auctionDetail.remainingRevealTime = auctionInfo.value.getValue3();
-        auctionDetail.paymentToken = auctionInfo.value.getValue4();
-        auctionDetail.bidStep = auctionInfo.value.getValue5();
-        auctionDetail.revealStep = auctionInfo.value.getValue6();
-        auctionDetail.currentBid = auctionInfo.value.getValue7();
-        auctionDetail.currentBidder = auctionInfo.value.getValue8();
-        auctionDetail.isEnded = auctionInfo.value.getValue9();
+        auctionDetail.startTime = auctionInfo.value.getValue2();
+        auctionDetail.endTime = auctionInfo.value.getValue3();
+        auctionDetail.stepDuration = auctionInfo.value.getValue4();
+        auctionDetail.paymentToken = auctionInfo.value.getValue5();
+        auctionDetail.bidStep = auctionInfo.value.getValue6();
+        auctionDetail.revealStep = auctionInfo.value.getValue7();
+        auctionDetail.currentBid = auctionInfo.value.getValue8();
+        auctionDetail.currentBidder = auctionInfo.value.getValue9();
+        auctionDetail.isEnded = auctionInfo.value.getValue10();
       } else {
         log.warning("Cannot get nftinfo", []);
       }
@@ -1075,8 +1150,7 @@ export function handleUpdateAuction(event: UpdateAuction): void {
         auctionDetail.startTime = auctionInfo.value.getValue4();
         auctionDetail.endTime = auctionInfo.value.getValue5();
         auctionDetail.bidStep = auctionInfo.value.getValue6();
-        auctionDetail.remainingBidTime = auctionInfo.value.getValue7();
-        auctionDetail.paymentToken = auctionInfo.value.getValue8();
+        auctionDetail.paymentToken = auctionInfo.value.getValue7();
       } else {
         log.warning("Cannot get auctionInfo", []);
       }

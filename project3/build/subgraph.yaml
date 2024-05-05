@@ -8,9 +8,9 @@ dataSources:
     name: AuctionFactory
     network: sepolia
     source:
-      address: "0xFD21f209bc31a220630bf68a0E97D0C6AB6A628c"
+      address: "0xb0f0615efC58c9884df197D01522e62B821f5cCb"
       abi: AuctionFactory
-      startBlock: 5386520
+      startBlock: 5746924
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
