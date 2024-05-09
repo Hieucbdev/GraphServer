@@ -540,19 +540,6 @@ export class AuctionDetail extends Entity {
     this.set("paymentToken", Value.fromBytes(value));
   }
 
-  get isEnded(): boolean {
-    let value = this.get("isEnded");
-    if (!value || value.kind == ValueKind.NULL) {
-      return false;
-    } else {
-      return value.toBoolean();
-    }
-  }
-
-  set isEnded(value: boolean) {
-    this.set("isEnded", Value.fromBoolean(value));
-  }
-
   get currentBidder(): Bytes {
     let value = this.get("currentBidder");
     if (!value || value.kind == ValueKind.NULL) {

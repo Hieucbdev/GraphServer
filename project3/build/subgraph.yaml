@@ -26,17 +26,17 @@ dataSources:
         - Collection
       abis:
         - name: AuctionFactory
-          file: AuctionFactory/abis/AuctionFactory.json
+          file: AuctionFactory\abis\AuctionFactory.json
         - name: DutchAuction
-          file: AuctionFactory/abis/DutchAuction.json
+          file: AuctionFactory\abis\DutchAuction.json
         - name: EnglishAuction
-          file: AuctionFactory/abis/EnglishAuction.json
+          file: AuctionFactory\abis\EnglishAuction.json
         - name: SealedBidAuctionV1
-          file: AuctionFactory/abis/SealedBidV1Auction.json
+          file: AuctionFactory\abis\SealedBidV1Auction.json
         - name: SealedBidAuctionV2
-          file: AuctionFactory/abis/SealedBidV2Auction.json
+          file: AuctionFactory\abis\SealedBidV2Auction.json
         - name: VickreyAuction
-          file: AuctionFactory/abis/VickreyAuction.json
+          file: AuctionFactory\abis\VickreyAuction.json
       eventHandlers:
         - event: AuctionCreated(address,uint256)
           handler: handleAuctionCreated
@@ -54,4 +54,4 @@ dataSources:
           handler: handleUnpaused
         - event: UpdateAuction(address,uint256)
           handler: handleUpdateAuction
-      file: AuctionFactory/AuctionFactory.wasm
+      file: AuctionFactory\AuctionFactory.wasm

@@ -35,8 +35,7 @@ export class DutchAuction__getAuctionInfoResult {
   value3: BigInt;
   value4: Address;
   value5: BigInt;
-  value6: boolean;
-  value7: Address;
+  value6: Address;
 
   constructor(
     value0: BigInt,
@@ -45,8 +44,7 @@ export class DutchAuction__getAuctionInfoResult {
     value3: BigInt,
     value4: Address,
     value5: BigInt,
-    value6: boolean,
-    value7: Address,
+    value6: Address,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -55,7 +53,6 @@ export class DutchAuction__getAuctionInfoResult {
     this.value4 = value4;
     this.value5 = value5;
     this.value6 = value6;
-    this.value7 = value7;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -66,8 +63,7 @@ export class DutchAuction__getAuctionInfoResult {
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromAddress(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
-    map.set("value6", ethereum.Value.fromBoolean(this.value6));
-    map.set("value7", ethereum.Value.fromAddress(this.value7));
+    map.set("value6", ethereum.Value.fromAddress(this.value6));
     return map;
   }
 
@@ -95,12 +91,8 @@ export class DutchAuction__getAuctionInfoResult {
     return this.value5;
   }
 
-  getValue6(): boolean {
+  getValue6(): Address {
     return this.value6;
-  }
-
-  getValue7(): Address {
-    return this.value7;
   }
 }
 
@@ -171,7 +163,7 @@ export class DutchAuction extends ethereum.SmartContract {
   getAuctionInfo(): DutchAuction__getAuctionInfoResult {
     let result = super.call(
       "getAuctionInfo",
-      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,bool,address)",
+      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,address)",
       [],
     );
 
@@ -182,15 +174,14 @@ export class DutchAuction extends ethereum.SmartContract {
       result[3].toBigInt(),
       result[4].toAddress(),
       result[5].toBigInt(),
-      result[6].toBoolean(),
-      result[7].toAddress(),
+      result[6].toAddress(),
     );
   }
 
   try_getAuctionInfo(): ethereum.CallResult<DutchAuction__getAuctionInfoResult> {
     let result = super.tryCall(
       "getAuctionInfo",
-      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,bool,address)",
+      "getAuctionInfo():(uint256,uint256,uint256,uint256,address,uint256,address)",
       [],
     );
     if (result.reverted) {
@@ -205,8 +196,7 @@ export class DutchAuction extends ethereum.SmartContract {
         value[3].toBigInt(),
         value[4].toAddress(),
         value[5].toBigInt(),
-        value[6].toBoolean(),
-        value[7].toAddress(),
+        value[6].toAddress(),
       ),
     );
   }

@@ -46,7 +46,6 @@ type AuctionDetail @entity {
   startingPrice: BigInt!
   stepDuration: BigInt!
   paymentToken: Bytes!
-  isEnded: Boolean! #!! Có thể gộp cái này với status => bỏ
   currentBidder: Bytes!
   currentBid: BigInt!
   startTime: BigInt!

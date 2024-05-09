@@ -118,7 +118,6 @@ export function handleAuctionCreated(event: AuctionCreated): void {
     auctionDetail.startingPrice = BigInt.fromI32(0);
     auctionDetail.stepDuration = BigInt.fromI32(0);
     auctionDetail.paymentToken = Bytes.empty();
-    auctionDetail.isEnded = false;
     auctionDetail.currentBidder = Bytes.empty();
     auctionDetail.currentBid = BigInt.fromI32(0);
     auctionDetail.startTime = BigInt.fromI32(0);
@@ -169,8 +168,7 @@ export function handleAuctionCreated(event: AuctionCreated): void {
         auctionDetail.stepDuration = auctionInfo.value.getValue3();
         auctionDetail.paymentToken = auctionInfo.value.getValue4();
         auctionDetail.startTime = auctionInfo.value.getValue5();
-        auctionDetail.isEnded = auctionInfo.value.getValue6();
-        auctionDetail.auctionCreator = auctionInfo.value.getValue7();
+        auctionDetail.auctionCreator = auctionInfo.value.getValue6();
       } else {
         log.warning("Cannot get nftinfo", []);
       }
@@ -451,7 +449,6 @@ export function handleBidAuction(event: BidAuction): void {
           auctionDetail.stepDuration = auctionInfo.value.getValue3();
           auctionDetail.paymentToken = auctionInfo.value.getValue4();
           auctionDetail.startTime = auctionInfo.value.getValue5();
-          auctionDetail.isEnded = auctionInfo.value.getValue6();
         } else {
           log.warning("Cannot get nftinfo", []);
         }
@@ -693,7 +690,6 @@ export function handleAuctionFinalized(event: AuctionFinalized): void {
           auctionDetail.stepDuration = auctionInfo.value.getValue3();
           auctionDetail.paymentToken = auctionInfo.value.getValue4();
           auctionDetail.startTime = auctionInfo.value.getValue5();
-          auctionDetail.isEnded = auctionInfo.value.getValue6();
         } else {
           log.warning("Cannot get nftinfo", []);
         }
@@ -844,7 +840,6 @@ export function handleRevealAuction(event: RevealAuction): void {
         auctionDetail.stepDuration = auctionInfo.value.getValue3();
         auctionDetail.paymentToken = auctionInfo.value.getValue4();
         auctionDetail.startTime = auctionInfo.value.getValue5();
-        auctionDetail.isEnded = auctionInfo.value.getValue6();
       } else {
         log.warning("Cannot get nftinfo", []);
       }
@@ -925,7 +920,6 @@ export function handleRevealStarted(event: RevealStarted): void {
         auctionDetail.stepDuration = auctionInfo.value.getValue3();
         auctionDetail.paymentToken = auctionInfo.value.getValue4();
         auctionDetail.startTime = auctionInfo.value.getValue5();
-        auctionDetail.isEnded = auctionInfo.value.getValue6();
       } else {
         log.warning("Cannot get nftinfo", []);
       }
