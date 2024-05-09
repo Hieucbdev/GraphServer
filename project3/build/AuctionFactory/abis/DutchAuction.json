@@ -32,29 +32,16 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "bidStepPercent",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_bidPrice",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "bidSteps",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "buy",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -66,99 +53,29 @@
   },
   {
     "inputs": [],
-    "name": "currentBid",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "currentBidder",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_newPrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_newDuration",
-        "type": "uint256"
-      }
-    ],
-    "name": "editAuction",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "endTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "factory",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "feePercentage",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "finalizeAuction",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getAuctionInfo",
     "outputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -169,29 +86,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
+        "internalType": "bool",
         "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "bool"
       },
       {
         "internalType": "address",
@@ -256,12 +153,22 @@
         "components": [
           {
             "internalType": "uint256",
-            "name": "startingBid",
+            "name": "minimumPrice",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "bidDuration",
+            "name": "startingPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "numberOfStep",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stepDuration",
             "type": "uint256"
           },
           {
@@ -275,7 +182,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IAuctionFactory.EnglishParams",
+        "internalType": "struct IAuctionFactory.DutchParams",
         "name": "params",
         "type": "tuple"
       }
@@ -287,7 +194,7 @@
   },
   {
     "inputs": [],
-    "name": "isAuctionOngoing",
+    "name": "isEnded",
     "outputs": [
       {
         "internalType": "bool",
@@ -300,33 +207,7 @@
   },
   {
     "inputs": [],
-    "name": "isCanceled",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_bidPrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "makeBid",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "minimumRemainingTime",
+    "name": "minimumPrice",
     "outputs": [
       {
         "internalType": "uint256",
@@ -365,6 +246,19 @@
       }
     ],
     "name": "nftValues",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "numberOfStep",
     "outputs": [
       {
         "internalType": "uint256",
@@ -481,7 +375,7 @@
   },
   {
     "inputs": [],
-    "name": "startTime",
+    "name": "startingPrice",
     "outputs": [
       {
         "internalType": "uint256",
@@ -494,7 +388,20 @@
   },
   {
     "inputs": [],
-    "name": "startingBid",
+    "name": "startingTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "stepDuration",
     "outputs": [
       {
         "internalType": "uint256",

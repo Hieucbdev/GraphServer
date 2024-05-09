@@ -436,53 +436,6 @@ export class AuctionFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  onERC1155Received(
-    operator: Address,
-    param1: Address,
-    id: BigInt,
-    value: BigInt,
-    _data: Bytes,
-  ): Bytes {
-    let result = super.call(
-      "onERC1155Received",
-      "onERC1155Received(address,address,uint256,uint256,bytes):(bytes4)",
-      [
-        ethereum.Value.fromAddress(operator),
-        ethereum.Value.fromAddress(param1),
-        ethereum.Value.fromUnsignedBigInt(id),
-        ethereum.Value.fromUnsignedBigInt(value),
-        ethereum.Value.fromBytes(_data),
-      ],
-    );
-
-    return result[0].toBytes();
-  }
-
-  try_onERC1155Received(
-    operator: Address,
-    param1: Address,
-    id: BigInt,
-    value: BigInt,
-    _data: Bytes,
-  ): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "onERC1155Received",
-      "onERC1155Received(address,address,uint256,uint256,bytes):(bytes4)",
-      [
-        ethereum.Value.fromAddress(operator),
-        ethereum.Value.fromAddress(param1),
-        ethereum.Value.fromUnsignedBigInt(id),
-        ethereum.Value.fromUnsignedBigInt(value),
-        ethereum.Value.fromBytes(_data),
-      ],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
   onERC721Received(
     operator: Address,
     param1: Address,
@@ -651,6 +604,52 @@ export class BidAuctionInFactoryCall__Outputs {
   }
 }
 
+export class CreateBulkAuctionCall extends ethereum.Call {
+  get inputs(): CreateBulkAuctionCall__Inputs {
+    return new CreateBulkAuctionCall__Inputs(this);
+  }
+
+  get outputs(): CreateBulkAuctionCall__Outputs {
+    return new CreateBulkAuctionCall__Outputs(this);
+  }
+}
+
+export class CreateBulkAuctionCall__Inputs {
+  _call: CreateBulkAuctionCall;
+
+  constructor(call: CreateBulkAuctionCall) {
+    this._call = call;
+  }
+
+  get nftAddresses(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
+  }
+
+  get ids(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
+  }
+
+  get values(): Array<BigInt> {
+    return this._call.inputValues[2].value.toBigIntArray();
+  }
+
+  get _data(): Bytes {
+    return this._call.inputValues[3].value.toBytes();
+  }
+
+  get isOneContract(): boolean {
+    return this._call.inputValues[4].value.toBoolean();
+  }
+}
+
+export class CreateBulkAuctionCall__Outputs {
+  _call: CreateBulkAuctionCall;
+
+  constructor(call: CreateBulkAuctionCall) {
+    this._call = call;
+  }
+}
+
 export class FinalizeAuctionInFactoryCall extends ethereum.Call {
   get inputs(): FinalizeAuctionInFactoryCall__Inputs {
     return new FinalizeAuctionInFactoryCall__Inputs(this);
@@ -801,56 +800,6 @@ export class OnERC1155BatchReceivedCall__Outputs {
   _call: OnERC1155BatchReceivedCall;
 
   constructor(call: OnERC1155BatchReceivedCall) {
-    this._call = call;
-  }
-
-  get value0(): Bytes {
-    return this._call.outputValues[0].value.toBytes();
-  }
-}
-
-export class OnERC1155ReceivedCall extends ethereum.Call {
-  get inputs(): OnERC1155ReceivedCall__Inputs {
-    return new OnERC1155ReceivedCall__Inputs(this);
-  }
-
-  get outputs(): OnERC1155ReceivedCall__Outputs {
-    return new OnERC1155ReceivedCall__Outputs(this);
-  }
-}
-
-export class OnERC1155ReceivedCall__Inputs {
-  _call: OnERC1155ReceivedCall;
-
-  constructor(call: OnERC1155ReceivedCall) {
-    this._call = call;
-  }
-
-  get operator(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get value1(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get value(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _data(): Bytes {
-    return this._call.inputValues[4].value.toBytes();
-  }
-}
-
-export class OnERC1155ReceivedCall__Outputs {
-  _call: OnERC1155ReceivedCall;
-
-  constructor(call: OnERC1155ReceivedCall) {
     this._call = call;
   }
 

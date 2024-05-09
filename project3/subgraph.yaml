@@ -8,43 +8,35 @@ dataSources:
     name: AuctionFactory
     network: sepolia
     source:
-      address: "0xb0f0615efC58c9884df197D01522e62B821f5cCb"
+      address: "0xfDA55771c61108F461986a7e86746f67f087562B"
       abi: AuctionFactory
-      startBlock: 5746924
+      startBlock: 5868207
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - AuctionCollection
         - AuctionCommon
         - AuctionDetail
         - Trade
         - User
         - NFT
+        - Volume
+        - Stat
+        - Collection
       abis:
         - name: AuctionFactory
           file: ./abis/AuctionFactory.json
-        - name: DutchAuction721
-          file: ./abis/DutchAuction721.json
-        - name: DutchAuction1155
-          file: ./abis/DutchAuction1155.json
-        - name: EnglishAuction721
-          file: ./abis/EnglishAuction721.json
-        - name: EnglishAuction1155
-          file: ./abis/EnglishAuction1155.json
-        - name: SealedBidAuctionV1721
-          file: ./abis/SealedBidAuctionV1721.json
-        - name: SealedBidAuctionV11155
-          file: ./abis/SealedBidAuctionV11155.json
-        - name: SealedBidAuctionV2721
-          file: ./abis/SealedBidAuctionV2721.json
-        - name: SealedBidAuctionV21155
-          file: ./abis/SealedBidAuctionV21155.json
-        - name: VickreyAuction721
-          file: ./abis/VickreyAuction721.json
-        - name: VickreyAuction1155
-          file: ./abis/VickreyAuction1155.json
+        - name: DutchAuction
+          file: ./abis/DutchAuction.json
+        - name: EnglishAuction
+          file: ./abis/EnglishAuction.json
+        - name: SealedBidAuctionV1
+          file: ./abis/SealedBidV1Auction.json
+        - name: SealedBidAuctionV2
+          file: ./abis/SealedBidV2Auction.json
+        - name: VickreyAuction
+          file: ./abis/VickreyAuction.json
       eventHandlers:
         - event: AuctionCreated(address,uint256)
           handler: handleAuctionCreated
