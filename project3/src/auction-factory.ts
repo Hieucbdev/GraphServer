@@ -574,6 +574,7 @@ export function handleBidAuction(event: BidAuction): void {
       trade.price = [event.params.amount];
       trade.auctionDetail = event.params.auction;
       trade.timestamp = [event.block.timestamp];
+      trade.newestTime = event.block.timestamp;
     } else {
       let hash = trade.hash;
       hash.push(event.transaction.hash);
